@@ -1,0 +1,45 @@
+{
+  "name": "@KRTac/react-fullscreenable-slider",
+  "version": "0.0.1",
+  "description": "A swipeable image slider with integrated lightbox and fullscreen functionality",
+  "scripts": {
+    "rollup": "rollup -c",
+    "storybook": "start-storybook -p 6006",
+    "build-storybook": "build-storybook"
+  },
+  "author": "Dino Krtanjek <krtanjekdino@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "@babel/core": "^7.18.2",
+    "@rollup/plugin-commonjs": "^22.0.0",
+    "@rollup/plugin-node-resolve": "^13.3.0",
+    "@rollup/plugin-typescript": "^8.3.2",
+    "@storybook/addon-actions": "^6.5.5",
+    "@storybook/addon-essentials": "^6.5.5",
+    "@storybook/addon-interactions": "^6.5.5",
+    "@storybook/addon-links": "^6.5.5",
+    "@storybook/builder-webpack5": "^6.5.5",
+    "@storybook/manager-webpack5": "^6.5.5",
+    "@storybook/react": "^6.5.5",
+    "@storybook/testing-library": "^0.0.11",
+    "@types/react": "^17.0.0",
+    "babel-loader": "^8.2.5",
+    "rollup": "^2.74.1",
+    "rollup-plugin-dts": "^4.2.2",
+    "rollup-plugin-peer-deps-external": "^2.2.4",
+    "rollup-plugin-terser": "^7.0.2",
+    "typescript": "^4.7.2"
+  },
+  "peerDependencies": {
+    "react": "^17.0.0"
+  },
+  "main": "dist/cjs/index.js",
+  "module": "dist/esm/index.js",
+  "files": [
+    "dist"
+  ],
+  "types": "dist/index.d.ts",
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/KRTac"
+  }
+}
