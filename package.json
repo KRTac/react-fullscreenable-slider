@@ -1,5 +1,5 @@
 {
-  "name": "@KRTac/react-fullscreenable-slider",
+  "name": "@krtac/react-fullscreenable-slider",
   "version": "0.0.1",
   "description": "A swipeable image slider with integrated lightbox and fullscreen functionality",
   "scripts": {
