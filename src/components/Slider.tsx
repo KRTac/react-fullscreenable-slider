@@ -16,6 +16,8 @@ export default function Slider({ children, index: indexProp = undefined }: Slide
       <AutoSwipeableViews
         index={0}
         onChangeIndex={() => {}}
+        slideClassName=""
+        enableMouseEvents
       >
         {children}
       </AutoSwipeableViews>

@@ -1,0 +1,11 @@
+.react-swipeable-view-container .slide-wrapper {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.react-swipeable-view-container .slide-wrapper > img {
+  max-width: 100%;
+  pointer-events: none;
+}

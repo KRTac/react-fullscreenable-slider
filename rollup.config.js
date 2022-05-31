@@ -29,6 +29,23 @@ export default [
       resolve(),
       commonjs(),
       typescript({ tsconfig: './tsconfig.json' }),
+      terser()
+    ]
+  },
+  {
+    input: 'src/styles/css/index.ts',
+    output: [
+      {
+        file: 'dist/css/index.js',
+        format: 'esm',
+        sourcemap: true
+      }
+    ],
+    plugins: [
+      peerDepsExternal(),
+      resolve(),
+      commonjs(),
+      typescript({ tsconfig: './tsconfig.json' }),
       terser(),
       postcss()
     ]

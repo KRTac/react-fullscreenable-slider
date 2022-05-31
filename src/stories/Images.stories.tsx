@@ -12,9 +12,11 @@ export default {
 
 const StandardTemplate: ComponentStory<typeof FsSlider> = (props) => {
   return (
-    <FsSlider {...props}>
-      {generateImgElements()}
-    </FsSlider>
+    <div style={{ width: '100%', maxWidth: '1110px', margin: '0 auto' }}>
+      <FsSlider {...props}>
+        {generateImgElements()}
+      </FsSlider>
+    </div>
   );
 };
 
