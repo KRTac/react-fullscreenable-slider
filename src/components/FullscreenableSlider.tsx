@@ -2,11 +2,25 @@ import React, { useState } from 'react';
 import Modal from 'react-modal';
 import { isElement } from 'react-is';
 
-import Slider from './Slider';
+import Slider, { SliderClassNames } from './Slider';
 import { flattenChildrenArray } from '../utils';
 
 
-interface FullscreenableSliderProps {
+export interface ModalClassNameObject {
+  base: string;
+  afterOpen: string;
+  beforeClose: string;
+}
+
+export interface FullscreenableSliderClassNames extends SliderClassNames {
+  modalClassName?: string | ModalClassNameObject;
+  modalOverlayClassName?: string | ModalClassNameObject;
+  modalPortalClassName?: string;
+  modalBodyOpenClassName?: string;
+  modalHtmlOpenClassName?: string;
+}
+
+interface FullscreenableSliderProps extends FullscreenableSliderClassNames {
   index?: number;
   label?: string;
   disableLightbox?: boolean;
@@ -16,7 +30,10 @@ interface FullscreenableSliderProps {
 function FullscreenableSlider({
   children,
   label,
-  disableLightbox = false
+  disableLightbox = false,
+  className, slideClassName, wrapperClassName,
+  modalClassName, modalOverlayClassName, modalPortalClassName,
+  modalBodyOpenClassName, modalHtmlOpenClassName
 }: FullscreenableSliderProps) {
   const [ lightboxIndex, setLightboxIndex ] = useState(-1);
   const childrenArray = flattenChildrenArray(children);
@@ -104,13 +121,27 @@ function FullscreenableSlider({
           isOpen
           contentLabel={label}
           onRequestClose={() => setLightboxIndex(-1)}
+          className={modalClassName}
+          overlayClassName={modalOverlayClassName}
+          portalClassName={modalPortalClassName}
+          bodyOpenClassName={modalBodyOpenClassName}
+          htmlOpenClassName={modalHtmlOpenClassName}
         >
-          <Slider>
+          <Slider
+            className={className}
+            slideClassName={slideClassName}
+            wrapperClassName={wrapperClassName}
+            isLightbox
+          >
             {lightboxBody}
           </Slider>
         </Modal>
       )}
-      <Slider>
+      <Slider
+        className={className}
+        slideClassName={slideClassName}
+        wrapperClassName={wrapperClassName}
+      >
         {body}
       </Slider>
     </>

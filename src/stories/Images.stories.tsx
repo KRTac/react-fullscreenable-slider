@@ -2,6 +2,7 @@ import React from 'react';
 import { ComponentStory, ComponentMeta } from '@storybook/react';
 
 import { FullscreenableSlider as FsSlider } from '..';
+import { getClassNameProps } from '../styles/css';
 import { generateImgElements } from './assets/unsplash';
 
 
@@ -21,4 +22,6 @@ const StandardTemplate: ComponentStory<typeof FsSlider> = (props) => {
 };
 
 export const Default = StandardTemplate.bind({});
-Default.args = {};
+Default.args = {
+  ...getClassNameProps()
+};

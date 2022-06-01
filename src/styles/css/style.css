@@ -1,11 +1,20 @@
-.react-swipeable-view-container .slide-wrapper {
+.fullscreenable-slider {
+  position: relative;
+}
+
+.fullscreenable-slider .slide-wrapper {
   position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-.react-swipeable-view-container .slide-wrapper > img {
+.fullscreenable-slider .slide-wrapper > img {
   max-width: 100%;
   pointer-events: none;
+}
+
+.fullscreenable-slider .prev-btn,
+.fullscreenable-slider .next-btn {
+  position: absolute;
 }
