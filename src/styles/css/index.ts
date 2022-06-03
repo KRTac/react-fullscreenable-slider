@@ -2,12 +2,14 @@ import { FullscreenableSliderClassNames } from '../../components/FullscreenableS
 import './style.css';
 
 
-const CSS_PROPS = {
+const CSS_PROPS: FullscreenableSliderClassNames = {
   className: {
     base: 'fullscreenable-slider',
     fullscreen: 'fullscreenable-slider fullscreen'
   },
   slideClassName: 'slide-wrapper',
+  activeSlideClassName: 'slide-wrapper active',
+  wrapperClassName: 'slider',
   previousBtnClassName: 'prev-btn',
   nextBtnClassName: 'next-btn'
 };

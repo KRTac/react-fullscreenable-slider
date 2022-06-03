@@ -2,7 +2,7 @@ import React from 'react';
 import { isFragment, isPortal } from 'react-is';
 
 
-export default function flattenChildrenArray(children: React.ReactNode): React.ReactNode[] {
+export default function flattenChildrenArray(children: React.ReactNode): (React.ReactChild | boolean)[] {
   let flattened: React.ReactNode[] = [];
 
   if (Array.isArray(children)) {
@@ -28,5 +28,5 @@ export default function flattenChildrenArray(children: React.ReactNode): React.R
     }
   }
 
-  return React.Children.toArray(flattened);
+  return <(React.ReactChild | boolean)[]> React.Children.toArray(flattened);
 }

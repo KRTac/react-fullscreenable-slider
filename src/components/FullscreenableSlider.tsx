@@ -22,6 +22,7 @@ export interface FullscreenableSliderClassNames extends SliderClassNames {
 
 interface FullscreenableSliderProps extends FullscreenableSliderClassNames {
   index?: number;
+  perSlide?: number;
   label?: string;
   disableLightbox?: boolean;
   children?: React.ReactNode;
@@ -30,16 +31,17 @@ interface FullscreenableSliderProps extends FullscreenableSliderClassNames {
 function FullscreenableSlider({
   children,
   label,
+  perSlide,
   disableLightbox = false,
-  className, slideClassName, wrapperClassName,
+  className, wrapperClassName, slideClassName, activeSlideClassName,
   modalClassName, modalOverlayClassName, modalPortalClassName,
   modalBodyOpenClassName, modalHtmlOpenClassName
 }: FullscreenableSliderProps) {
   const [ lightboxIndex, setLightboxIndex ] = useState(-1);
   const childrenArray = flattenChildrenArray(children);
 
-  const body: React.ReactNode[] = [];
-  const lightboxBody: React.ReactNode[] = [];
+  const body: (boolean | React.ReactChild)[] = [];
+  const lightboxBody:(boolean | React.ReactChild)[] = [];
 
   for (const child of childrenArray) {
     const childEl = child as React.ReactElement;
@@ -130,7 +132,9 @@ function FullscreenableSlider({
           <Slider
             className={className}
             slideClassName={slideClassName}
+            activeSlideClassName={activeSlideClassName}
             wrapperClassName={wrapperClassName}
+            perSlide={perSlide}
             isLightbox
           >
             {lightboxBody}
@@ -140,7 +144,9 @@ function FullscreenableSlider({
       <Slider
         className={className}
         slideClassName={slideClassName}
+        activeSlideClassName={activeSlideClassName}
         wrapperClassName={wrapperClassName}
+        perSlide={perSlide}
       >
         {body}
       </Slider>
