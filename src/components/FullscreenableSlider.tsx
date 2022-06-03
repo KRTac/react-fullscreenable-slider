@@ -20,7 +20,7 @@ export interface FullscreenableSliderClassNames extends SliderClassNames {
   modalHtmlOpenClassName?: string;
 }
 
-interface FullscreenableSliderProps extends FullscreenableSliderClassNames, SliderProps {
+interface FullscreenableSliderProps extends FullscreenableSliderClassNames, Omit<SliderProps, 'children'> {
   index?: number;
   label?: string;
   disableLightbox?: boolean;
