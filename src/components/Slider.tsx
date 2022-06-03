@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState, useMemo, useCallback } from 'react';
 import { createUseGesture, dragAction, pinchAction } from '@use-gesture/react';
-import { useSpring, animated } from '@react-spring/web';
+import { useSpring, useSprings, animated } from '@react-spring/web';
 import useResizeObserver from '@react-hook/resize-observer';
 import { useDebounce } from '@react-hook/debounce';
 
@@ -21,13 +21,29 @@ export interface SliderClassNames {
   nextBtnClassName?: string | SliderClassNameStates;
 }
 
-interface SliderProps extends SliderClassNames {
+export interface SliderProps extends SliderClassNames {
   isLightbox?: boolean;
   index?: number;
   itemsPerPage?: number;
   children?: (boolean | React.ReactChild)[];
   previousBtnLabel?: string;
   nextBtnLabel?: string;
+  calculateItemsPerPage?: boolean;
+}
+
+function getTargetIndex(target: HTMLElement, items: (HTMLElement | null)[]) {
+  let eventTargetIndex = -1;
+
+  while (target) {
+    eventTargetIndex = items.indexOf(target)
+    if (eventTargetIndex > -1) {
+      break;
+    }
+
+    target = target.parentElement as HTMLElement;
+  }
+
+  return eventTargetIndex;
 }
 
 const useGesture = createUseGesture([ dragAction, pinchAction ]);
@@ -38,16 +54,26 @@ export default function Slider({
   children, index: indexProp = undefined,
   className, wrapperClassName, slideClassName, activeSlideClassName,
   previousBtnClassName, nextBtnClassName,
-  previousBtnLabel = 'Previous slide', nextBtnLabel = 'Next slide'
+  previousBtnLabel = 'Previous slide', nextBtnLabel = 'Next slide',
+  calculateItemsPerPage = true
 }: SliderProps) {
+  const isReady = useRef(false);
+  const childrenCount = (children && children.length) || 0;
   const [ activeIndex, setActiveIndex ] = useState(0);
   const currentIndexRef: React.MutableRefObject<number> = useRef(activeIndex);
   const sliderRef: React.MutableRefObject<HTMLDivElement | null> = useRef(null);
   const [ sliderSpringStyles, sliderSpring ] = useSpring(() => ({ x: 0 }));
-  const [ itemSpringStyles, itemSpring ] = useSpring(() => ({ x: 0, y: 0, scale: 1 }));
-  const hasChildren = children && children.length > 0;
-  const animatedChildRefs = useRef<Array<HTMLDivElement | null>>([]);
-  const [ itemsPerPage, setItemsPerPageDelay, setItemsPerPage ] = useDebounce(itemsPerPageProp, 50);
+  const [ itemSpringStyles, itemSprings ] = useSprings(childrenCount, () => ({
+    x: 0,
+    y: 0,
+    scale: 1
+  }));
+  const animatedChildRefs = useRef<Array<HTMLElement | null>>([]);
+  const [
+    itemsPerPage,
+    setItemsPerPageDelay,
+    setItemsPerPage
+  ] = useDebounce(itemsPerPageProp, 50);
   const [ slideDim, setSlideDimDelay, setSlideDim ] = useDebounce<number>(-1, 50);
 
   const updateSlideDim = useCallback(({ width: wrapperWidth }, skipAnimation) => {
@@ -55,7 +81,7 @@ export default function Slider({
       return;
     }
 
-    const {
+    let {
       width: firstSlideDim
     } = animatedChildRefs.current[0]?.getBoundingClientRect() || { width: 0 };
 
@@ -63,9 +89,16 @@ export default function Slider({
       return;
     }
 
-    const itemsPerPage = Math.round(wrapperWidth / firstSlideDim);
+    let itemsPerPage = itemsPerPageProp;
 
-    if (slideDim === -1) {
+    if (calculateItemsPerPage) {
+      itemsPerPage = Math.round(wrapperWidth / firstSlideDim);
+    } else {
+      firstSlideDim = wrapperWidth / itemsPerPageProp;
+    }
+
+    if (!isReady.current) {
+      isReady.current = true;
       setSlideDim(firstSlideDim);
       setItemsPerPage(itemsPerPage);
     } else {
@@ -80,7 +113,7 @@ export default function Slider({
       });
     }
   }, [
-    slideDim, sliderSpring,
+    calculateItemsPerPage, itemsPerPageProp, sliderSpring,
     setSlideDim, setSlideDimDelay,
     setItemsPerPage, setItemsPerPageDelay
   ]);
@@ -91,23 +124,29 @@ export default function Slider({
 
   useGesture(
     {
-      onDrag: ({ down, movement, velocity, pinching, cancel, memo }) => {
-        if (pinching || !hasChildren || slideDim <= 0) {
+      onDrag: ({ down, movement, velocity, pinching, cancel, memo, target }) => {
+        if (pinching || slideDim <= 0) {
           return cancel();
         }
 
-        if (itemSpringStyles.scale.get() > 1.3) {
+        const eventTargetIndex = getTargetIndex(target as HTMLElement, animatedChildRefs.current);
+
+        if (itemSpringStyles[eventTargetIndex].scale.get() > 1.3) {
           if (!memo) {
             memo = {
-              x: itemSpringStyles.x.get(),
-              y: itemSpringStyles.y.get()
+              x: itemSpringStyles[eventTargetIndex].x.get(),
+              y: itemSpringStyles[eventTargetIndex].y.get()
             };
           }
 
-          itemSpring.start({
-            x: memo.x + movement[0],
-            y: memo.y + movement[1],
-            immediate: down
+          itemSprings.start(idx => {
+            if (idx === eventTargetIndex) {
+              return {
+                x: memo.x + movement[0],
+                y: memo.y + movement[1],
+                immediate: down
+              };
+            }
           });
 
           return down ? memo : undefined;
@@ -135,8 +174,8 @@ export default function Slider({
 
         let newIndex = currentIndexRef.current + indexDelta;
         
-        if (newIndex > children.length - itemsPerPage) {
-          newIndex = children.length - itemsPerPage;
+        if (newIndex > childrenCount - itemsPerPage) {
+          newIndex = childrenCount - itemsPerPage;
         }
 
         if (newIndex < 0) {
@@ -144,14 +183,17 @@ export default function Slider({
         }
         
         if (activeIndex !== newIndex) {
-          setActiveIndex(newIndex);
-
-          itemSpring.start({
-            x: 0,
-            y: 0,
-            scale: 1,
-            immediate: true
+          itemSprings.start(idx => {
+            if (idx === activeIndex) {
+              return {
+                x: 0,
+                y: 0,
+                scale: 1
+              };
+            }
           });
+
+          setActiveIndex(newIndex);
         }
 
         let movementDelta = movement[0];
@@ -168,19 +210,24 @@ export default function Slider({
       },
       onPinch: ({
         origin: [ ox, oy ], first, movement: [ ms ],
-        offset: [ scale ], memo, cancel, active
+        offset: [ scale ], memo, cancel, active, target
       }) => {
         if (animatedChildRefs.current.length === 0 || !sliderRef.current) {
           return cancel();
         }
 
-        const slideAnimationEl = animatedChildRefs.current[activeIndex];
+        const eventTargetIndex = getTargetIndex(target as HTMLElement, animatedChildRefs.current);
+        const eventTarget = animatedChildRefs.current[eventTargetIndex];
 
-        if (slideAnimationEl && first) {
-          const { width, height, x, y } = slideAnimationEl.getBoundingClientRect();
+        if (eventTarget && first) {
+          const { width, height, x, y } = eventTarget.getBoundingClientRect();
           const tx = ox - (x + width / 2);
           const ty = oy - (y + height / 2);
-          memo = [ itemSpringStyles.x.get(), itemSpringStyles.y.get(), tx, ty ];
+          memo = [
+            itemSpringStyles[eventTargetIndex].x.get(),
+            itemSpringStyles[eventTargetIndex].y.get(),
+            tx, ty
+          ];
         }
 
         let x = memo[0] - (ms - 1) * memo[2];
@@ -196,7 +243,11 @@ export default function Slider({
           scale = 1;
         }
 
-        itemSpring.start({ scale, x, y });
+        itemSprings.start(idx => {
+          if (idx === eventTargetIndex) {
+            return { scale, x, y };
+          }
+        });
 
         return memo;
       }
@@ -260,6 +311,14 @@ export default function Slider({
   }, []);
 
   useEffect(() => {
+    if (!sliderRef.current) {
+      return;
+    }
+
+    updateSlideDim(sliderRef.current.getBoundingClientRect(), false);
+  }, [ updateSlideDim ]);
+
+  useEffect(() => {
     if (!children) {
       animatedChildRefs.current = [];
 
@@ -288,7 +347,7 @@ export default function Slider({
               )}
             >
               <animated.div
-                style={idx === activeIndex ? itemSpringStyles : {}}
+                style={itemSpringStyles[idx]}
                 ref={el => animatedChildRefs.current[idx] = el}
               >
                 {child}

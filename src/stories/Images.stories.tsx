@@ -24,5 +24,5 @@ const StandardTemplate: ComponentStory<typeof FsSlider> = (props) => {
 export const Default = StandardTemplate.bind({});
 Default.args = {
   ...getClassNameProps(),
-  perSlide: 1
+  itemsPerPage: 1
 };

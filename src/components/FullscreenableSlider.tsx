@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Modal from 'react-modal';
 import { isElement } from 'react-is';
 
-import Slider, { SliderClassNames } from './Slider';
+import Slider, { SliderClassNames, SliderProps } from './Slider';
 import { flattenChildrenArray } from '../utils';
 
 
@@ -20,9 +20,8 @@ export interface FullscreenableSliderClassNames extends SliderClassNames {
   modalHtmlOpenClassName?: string;
 }
 
-interface FullscreenableSliderProps extends FullscreenableSliderClassNames {
+interface FullscreenableSliderProps extends FullscreenableSliderClassNames, SliderProps {
   index?: number;
-  perSlide?: number;
   label?: string;
   disableLightbox?: boolean;
   children?: React.ReactNode;
@@ -31,11 +30,12 @@ interface FullscreenableSliderProps extends FullscreenableSliderClassNames {
 function FullscreenableSlider({
   children,
   label,
-  perSlide,
+  itemsPerPage,
   disableLightbox = false,
   className, wrapperClassName, slideClassName, activeSlideClassName,
   modalClassName, modalOverlayClassName, modalPortalClassName,
-  modalBodyOpenClassName, modalHtmlOpenClassName
+  modalBodyOpenClassName, modalHtmlOpenClassName,
+  calculateItemsPerPage
 }: FullscreenableSliderProps) {
   const [ lightboxIndex, setLightboxIndex ] = useState(-1);
   const childrenArray = flattenChildrenArray(children);
@@ -134,7 +134,8 @@ function FullscreenableSlider({
             slideClassName={slideClassName}
             activeSlideClassName={activeSlideClassName}
             wrapperClassName={wrapperClassName}
-            perSlide={perSlide}
+            itemsPerPage={itemsPerPage}
+            calculateItemsPerPage={calculateItemsPerPage}
             isLightbox
           >
             {lightboxBody}
@@ -146,7 +147,8 @@ function FullscreenableSlider({
         slideClassName={slideClassName}
         activeSlideClassName={activeSlideClassName}
         wrapperClassName={wrapperClassName}
-        perSlide={perSlide}
+        itemsPerPage={itemsPerPage}
+        calculateItemsPerPage={calculateItemsPerPage}
       >
         {body}
       </Slider>
