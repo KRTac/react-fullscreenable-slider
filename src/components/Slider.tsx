@@ -10,7 +10,7 @@ import { resolveClassName, noop, preventEventDefault } from '../utils';
 export interface SliderClassNameStates {
   base?: string;
   fullscreen?: string;
-}
+};
 
 export interface SliderClassNames {
   className?: string | SliderClassNameStates;
@@ -19,9 +19,9 @@ export interface SliderClassNames {
   wrapperClassName?: string | SliderClassNameStates;
   previousBtnClassName?: string | SliderClassNameStates;
   nextBtnClassName?: string | SliderClassNameStates;
-}
+};
 
-export interface SliderProps extends SliderClassNames {
+export interface SliderProps {
   isLightbox?: boolean;
   index?: number;
   itemsPerPage?: number;
@@ -29,7 +29,8 @@ export interface SliderProps extends SliderClassNames {
   previousBtnLabel?: string;
   nextBtnLabel?: string;
   calculateItemsPerPage?: boolean;
-}
+};
+export interface SliderProps extends SliderClassNames {};
 
 function getTargetIndex(target: HTMLElement, items: (HTMLElement | null)[]) {
   let eventTargetIndex = -1;

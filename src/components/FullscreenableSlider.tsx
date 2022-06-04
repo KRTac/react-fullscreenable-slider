@@ -10,22 +10,26 @@ export interface ModalClassNameObject {
   base: string;
   afterOpen: string;
   beforeClose: string;
-}
+};
 
-export interface FullscreenableSliderClassNames extends SliderClassNames {
+interface FullscreenableSliderClassNames {
   modalClassName?: string | ModalClassNameObject;
   modalOverlayClassName?: string | ModalClassNameObject;
   modalPortalClassName?: string;
   modalBodyOpenClassName?: string;
   modalHtmlOpenClassName?: string;
-}
+};
+interface FullscreenableSliderClassNames extends SliderClassNames {};
 
-interface FullscreenableSliderProps extends FullscreenableSliderClassNames, Omit<SliderProps, 'children'> {
+interface FullscreenableSliderProps {
   index?: number;
   label?: string;
   disableLightbox?: boolean;
   children?: React.ReactNode;
-}
+};
+interface FullscreenableSliderProps extends Omit<SliderProps, 'children'> {};
+interface FullscreenableSliderProps extends FullscreenableSliderClassNames {};
+
 
 function FullscreenableSlider({
   children,
