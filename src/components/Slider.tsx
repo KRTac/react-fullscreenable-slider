@@ -4,7 +4,10 @@ import { useSpring, useSprings, animated } from '@react-spring/web';
 import useResizeObserver from '@react-hook/resize-observer';
 import { useDebounce } from '@react-hook/debounce';
 
-import { resolveClassName, noop, preventEventDefault } from '../utils';
+import {
+  resolveClassName, noop, preventEventDefault,
+  isActiveIndex
+} from '../utils';
 
 
 export interface SliderClassNameStates {
@@ -60,8 +63,8 @@ export default function Slider({
 }: SliderProps) {
   const isReady = useRef(false);
   const childrenCount = (children && children.length) || 0;
-  const [ activeIndex, setActiveIndex ] = useState(0);
-  const currentIndexRef: React.MutableRefObject<number> = useRef(activeIndex);
+  const [ firstActiveIndex, setFirstActiveIndex ] = useState(0);
+  const currentIndexRef: React.MutableRefObject<number> = useRef(firstActiveIndex);
   const sliderRef: React.MutableRefObject<HTMLDivElement | null> = useRef(null);
   const [ sliderSpringStyles, sliderSpring ] = useSpring(() => ({ x: 0 }));
   const [ itemSpringStyles, itemSprings ] = useSprings(childrenCount, () => ({
@@ -182,10 +185,10 @@ export default function Slider({
         if (newIndex < 0) {
           newIndex = 0;
         }
-        
-        if (activeIndex !== newIndex) {
+
+        if (firstActiveIndex !== newIndex) {
           itemSprings.start(idx => {
-            if (idx === activeIndex) {
+            if (!isActiveIndex(idx, newIndex, itemsPerPage)) {
               return {
                 x: 0,
                 y: 0,
@@ -194,7 +197,7 @@ export default function Slider({
             }
           });
 
-          setActiveIndex(newIndex);
+          setFirstActiveIndex(newIndex);
         }
 
         let movementDelta = movement[0];
@@ -279,7 +282,7 @@ export default function Slider({
     }
 
     if (currentIndexRef.current > newMaxIndex) {
-      setActiveIndex(newMaxIndex);
+      setFirstActiveIndex(newMaxIndex);
       currentIndexRef.current = newMaxIndex;
     }
 
@@ -342,7 +345,7 @@ export default function Slider({
             <div
               key={(typeof child === 'object' && child.key) || idx}
               className={(
-                idx === activeIndex
+                isActiveIndex(idx, firstActiveIndex, itemsPerPage)
                   ? resolveClassName(activeSlideClassName, isLightbox)
                   : resolveClassName(slideClassName, isLightbox)
               )}
