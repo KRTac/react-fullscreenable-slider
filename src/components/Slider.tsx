@@ -6,14 +6,14 @@ import { useDebounce } from '@react-hook/debounce';
 
 import {
   resolveClassName, noop, preventEventDefault,
-  isActiveIndex
+  isActiveIndex, getAnimationTargetIndex
 } from '../utils';
 
 
 export interface SliderClassNameStates {
   base?: string;
   fullscreen?: string;
-};
+}
 
 export interface SliderClassNames {
   className?: string | SliderClassNameStates;
@@ -22,7 +22,7 @@ export interface SliderClassNames {
   wrapperClassName?: string | SliderClassNameStates;
   previousBtnClassName?: string | SliderClassNameStates;
   nextBtnClassName?: string | SliderClassNameStates;
-};
+}
 
 export interface SliderProps {
   isLightbox?: boolean;
@@ -32,23 +32,9 @@ export interface SliderProps {
   previousBtnLabel?: string;
   nextBtnLabel?: string;
   calculateItemsPerPage?: boolean;
-};
-export interface SliderProps extends SliderClassNames {};
-
-function getTargetIndex(target: HTMLElement, items: (HTMLElement | null)[]) {
-  let eventTargetIndex = -1;
-
-  while (target) {
-    eventTargetIndex = items.indexOf(target)
-    if (eventTargetIndex > -1) {
-      break;
-    }
-
-    target = target.parentElement as HTMLElement;
-  }
-
-  return eventTargetIndex;
 }
+export interface SliderProps extends SliderClassNames {}
+
 
 const useGesture = createUseGesture([ dragAction, pinchAction ]);
 
@@ -112,8 +98,7 @@ export default function Slider({
 
     if (!skipAnimation) {
       sliderSpring.start({
-        x: firstSlideDim * -currentIndexRef.current,
-        immediate: false
+        x: firstSlideDim * -currentIndexRef.current
       });
     }
   }, [
@@ -126,6 +111,18 @@ export default function Slider({
     updateSlideDim(contentRect, false);
   });
 
+  let dragBounds = 0;
+
+  if (slideDim > 0 && children) {
+    dragBounds = slideDim * children.length - slideDim * itemsPerPage;
+
+    if (dragBounds <= 0) {
+      dragBounds = 0;
+    } else {
+      dragBounds = -dragBounds;
+    }
+  }
+
   useGesture(
     {
       onDrag: ({ down, movement, velocity, pinching, cancel, memo, target }) => {
@@ -133,7 +130,7 @@ export default function Slider({
           return cancel();
         }
 
-        const eventTargetIndex = getTargetIndex(target as HTMLElement, animatedChildRefs.current);
+        const eventTargetIndex = getAnimationTargetIndex(target as HTMLElement, animatedChildRefs.current);
 
         if (itemSpringStyles[eventTargetIndex].scale.get() > 1.3) {
           if (!memo) {
@@ -220,7 +217,7 @@ export default function Slider({
           return cancel();
         }
 
-        const eventTargetIndex = getTargetIndex(target as HTMLElement, animatedChildRefs.current);
+        const eventTargetIndex = getAnimationTargetIndex(target as HTMLElement, animatedChildRefs.current);
         const eventTarget = animatedChildRefs.current[eventTargetIndex];
 
         if (eventTarget && first) {
@@ -261,11 +258,17 @@ export default function Slider({
       eventOptions: { capture: false, passive: false },
       drag: {
         filterTaps: true,
-        preventDefault: true
+        preventDefault: true,
+        bounds: {
+          left: dragBounds,
+          right: 0,
+          top: 0,
+          bottom: 0
+        },
+        rubberband: true
       },
       pinch: {
-        scaleBounds: { min: .5, max: 5 },
-        rubberband: true
+        scaleBounds: { min: .5, max: 5 }
       }
     }
   );
