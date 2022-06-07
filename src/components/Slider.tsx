@@ -36,6 +36,13 @@ export interface SliderProps {
 export interface SliderProps extends SliderClassNames {}
 
 
+const DEFAULT_BOUNDS = {
+  left: 0,
+  right: 0,
+  top: 0,
+  bottom: 0
+};
+
 const useGesture = createUseGesture([ dragAction, pinchAction ]);
 
 export default function Slider({
@@ -51,7 +58,9 @@ export default function Slider({
   const childrenCount = (children && children.length) || 0;
   const [ firstActiveIndex, setFirstActiveIndex ] = useState(0);
   const currentIndexRef: React.MutableRefObject<number> = useRef(firstActiveIndex);
+  const rootBounds: React.MutableRefObject<object | undefined> = useRef(undefined);
   const sliderRef: React.MutableRefObject<HTMLDivElement | null> = useRef(null);
+  const [ dragBounds, setDragBounds ] = useState<Object | undefined>(DEFAULT_BOUNDS);
   const [ sliderSpringStyles, sliderSpring ] = useSpring(() => ({ x: 0 }));
   const [ itemSpringStyles, itemSprings ] = useSprings(childrenCount, () => ({
     x: 0,
@@ -111,18 +120,6 @@ export default function Slider({
     updateSlideDim(contentRect, false);
   });
 
-  let dragBounds = 0;
-
-  if (slideDim > 0 && children) {
-    dragBounds = slideDim * children.length - slideDim * itemsPerPage;
-
-    if (dragBounds <= 0) {
-      dragBounds = 0;
-    } else {
-      dragBounds = -dragBounds;
-    }
-  }
-
   useGesture(
     {
       onDrag: ({ down, movement, velocity, pinching, cancel, memo, target }) => {
@@ -130,9 +127,14 @@ export default function Slider({
           return cancel();
         }
 
+        let targetScale = 1;
         const eventTargetIndex = getAnimationTargetIndex(target as HTMLElement, animatedChildRefs.current);
+        
+        if (itemSpringStyles[eventTargetIndex]) {
+          targetScale = itemSpringStyles[eventTargetIndex].scale.get();
+        }
 
-        if (itemSpringStyles[eventTargetIndex].scale.get() > 1.3) {
+        if (targetScale > 1) {
           if (!memo) {
             memo = {
               x: itemSpringStyles[eventTargetIndex].x.get(),
@@ -251,6 +253,23 @@ export default function Slider({
         });
 
         return memo;
+      },
+      onPointerDownCapture: ({ event }) => {
+        const eventTargetIndex = getAnimationTargetIndex(event.target as HTMLElement, animatedChildRefs.current);
+        
+        if (itemSpringStyles[eventTargetIndex] && itemSpringStyles[eventTargetIndex].scale.get() !== 1) {
+          rootBounds.current = dragBounds;
+
+          setDragBounds(undefined);
+        } else {
+          rootBounds.current = undefined;
+        }
+      },
+      onPointerUpCapture: () => {
+        if (rootBounds.current) {
+          setDragBounds(rootBounds.current);
+          rootBounds.current = undefined;
+        }
       }
     },
     {
@@ -259,13 +278,8 @@ export default function Slider({
       drag: {
         filterTaps: true,
         preventDefault: true,
-        bounds: {
-          left: dragBounds,
-          right: 0,
-          top: 0,
-          bottom: 0
-        },
-        rubberband: true
+        bounds: dragBounds,
+        rubberband: !!dragBounds
       },
       pinch: {
         scaleBounds: { min: .5, max: 5 }
@@ -289,9 +303,23 @@ export default function Slider({
       currentIndexRef.current = newMaxIndex;
     }
 
+    if (slideDim <= 0) {
+      return;
+    }
+
     sliderSpring.start({
       x: slideDim * -currentIndexRef.current
     });
+
+    let left = slideDim * children.length - slideDim * itemsPerPage;
+
+    if (left <= 0) {
+      left = 0;
+    } else {
+      left = -left;
+    }
+
+    setDragBounds({ ...DEFAULT_BOUNDS, left });
   }, [ slideDim, children, sliderSpring, itemsPerPage ]);
 
   useEffect(() => {
