@@ -26,13 +26,12 @@ export interface SliderClassNames {
 }
 
 export interface SliderProps {
-  isLightbox?: boolean;
+  lightboxMode?: boolean;
   index?: number;
-  itemsPerPage?: number;
+  itemsPerPage?: number | string;
   children?: (boolean | React.ReactChild)[];
   previousBtnLabel?: string;
   nextBtnLabel?: string;
-  calculateItemsPerPage?: boolean;
   previousBtnContent?: React.ReactElement;
   nextBtnContent?: React.ReactElement;
 }
@@ -49,13 +48,12 @@ const DEFAULT_BOUNDS = {
 const useGesture = createUseGesture([ dragAction, pinchAction ]);
 
 export default function Slider({
-  isLightbox = false,
-  itemsPerPage: itemsPerPageProp = 1,
+  lightboxMode = false,
+  itemsPerPage: itemsPerPageProp = 'auto',
   children, index: indexProp = undefined,
   className, wrapperClassName, slideClassName, activeSlideClassName, visibleSlideClassName,
   previousBtnClassName, nextBtnClassName,
   previousBtnLabel = 'Previous slide', nextBtnLabel = 'Next slide',
-  calculateItemsPerPage = true,
   previousBtnContent, nextBtnContent
 }: SliderProps) {
   const isReady = useRef(false);
@@ -89,14 +87,14 @@ export default function Slider({
 
     let itemsPerPage = itemsPerPageProp;
 
-    if (calculateItemsPerPage) {
+    if (itemsPerPage === 'auto') {
       if (firstSlideDim <= 0) {
         return;
       }
 
       itemsPerPage = Math.round(wrapperWidth / firstSlideDim);
     } else {
-      firstSlideDim = wrapperWidth / itemsPerPageProp;
+      firstSlideDim = wrapperWidth / (itemsPerPage as number);
     }
 
     if (!isReady.current) {
@@ -114,7 +112,7 @@ export default function Slider({
       });
     }
   }, [
-    calculateItemsPerPage, itemsPerPageProp, sliderSpring,
+    itemsPerPageProp, sliderSpring,
     setSlideDim, setSlideDimDelay,
     setItemsPerPage, setItemsPerPageDelay
   ]);
@@ -256,15 +254,15 @@ export default function Slider({
       drag: {
         filterTaps: true,
         preventDefault: true,
-        bounds: ({ event }) => {
-          const bounds = { top: -Infinity, bottom: Infinity, left: -Infinity, right: Infinity };
-          const eventTargetIndex = getAnimationTargetIndex(event.target as HTMLElement, animatedChildRefs.current);
+        bounds: ({ target }) => {
+          const eventTargetIndex = getAnimationTargetIndex(target as HTMLElement, animatedChildRefs.current);
           
           if (
             animatedChildRefs.current[eventTargetIndex] &&
             itemSpringStyles[eventTargetIndex] &&
             itemSpringStyles[eventTargetIndex].scale.get() !== 1
           ) {
+            const bounds = { top: -Infinity, bottom: Infinity, left: -Infinity, right: Infinity };
             // const itemRect = animatedChildRefs.current[eventTargetIndex].getBoundingClientRect();
             
             // bounds.left = (itemRect.width - slideDim) / -2;
@@ -425,8 +423,8 @@ export default function Slider({
   }
 
   return (
-    <div className={resolveClassName(className, isLightbox)}>
-      <div ref={sliderRef} className={resolveClassName(wrapperClassName, isLightbox)}>
+    <div className={resolveClassName(className, lightboxMode)}>
+      <div ref={sliderRef} className={resolveClassName(wrapperClassName, lightboxMode)}>
         <animated.div style={sliderSpringStyles}>
           {React.Children.map(children || [], (child, idx) => (
             <div
@@ -437,7 +435,7 @@ export default function Slider({
                   : isVisibleIndex(idx, firstVisibleIndex, itemsPerPage)
                     ? visibleSlideClassName
                     : slideClassName
-              ), isLightbox)}
+              ), lightboxMode)}
             >
               <animated.div
                 style={itemSpringStyles[idx]}
@@ -450,7 +448,7 @@ export default function Slider({
         </animated.div>
       </div>
       <span
-        className={resolveClassName(previousBtnClassName, isLightbox)}
+        className={resolveClassName(previousBtnClassName, lightboxMode)}
         onClick={() => updateActiveIndex(activeIndex - 1)}
         aria-label={previousBtnLabel}
         tabIndex={0}
@@ -460,7 +458,7 @@ export default function Slider({
         {previousBtnContent}
       </span>
       <span
-        className={resolveClassName(nextBtnClassName, isLightbox)}
+        className={resolveClassName(nextBtnClassName, lightboxMode)}
         onClick={() => updateActiveIndex(activeIndex + 1)}
         aria-label={nextBtnLabel}
         tabIndex={0}

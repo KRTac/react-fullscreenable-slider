@@ -27,7 +27,7 @@ interface FullscreenableSliderProps {
   disableLightbox?: boolean;
   children?: React.ReactNode;
 }
-interface FullscreenableSliderProps extends Omit<SliderProps, 'children'> {}
+interface FullscreenableSliderProps extends Omit<SliderProps, 'children' | 'lightboxMode'> {}
 interface FullscreenableSliderProps extends FullscreenableSliderClassNames {}
 
 
@@ -40,8 +40,7 @@ function FullscreenableSlider({
   slideClassName, activeSlideClassName, visibleSlideClassName,
   previousBtnClassName, nextBtnClassName,
   modalClassName, modalOverlayClassName, modalPortalClassName,
-  modalBodyOpenClassName, modalHtmlOpenClassName,
-  calculateItemsPerPage
+  modalBodyOpenClassName, modalHtmlOpenClassName
 }: FullscreenableSliderProps) {
   const [ lightboxIndex, setLightboxIndex ] = useState(-1);
   const childrenArray = flattenChildrenArray(children);
@@ -144,8 +143,7 @@ function FullscreenableSlider({
             previousBtnClassName={previousBtnClassName}
             nextBtnClassName={nextBtnClassName}
             itemsPerPage={itemsPerPage}
-            calculateItemsPerPage={calculateItemsPerPage}
-            isLightbox
+            lightboxMode
           >
             {lightboxBody}
           </Slider>
@@ -160,7 +158,6 @@ function FullscreenableSlider({
         previousBtnClassName={previousBtnClassName}
         nextBtnClassName={nextBtnClassName}
         itemsPerPage={itemsPerPage}
-        calculateItemsPerPage={calculateItemsPerPage}
       >
         {body}
       </Slider>
