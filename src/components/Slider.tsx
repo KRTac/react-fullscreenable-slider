@@ -73,7 +73,7 @@ export default function Slider({
     itemsPerPage,
     setItemsPerPageDelay,
     setItemsPerPage
-  ] = useDebounce(itemsPerPageProp, 50);
+  ] = useDebounce(typeof itemsPerPageProp === 'number' ? itemsPerPageProp : 1, 50);
   const [ slideDim, setSlideDimDelay, setSlideDim ] = useDebounce<number>(-1, 50);
 
   const updateSlideDim = useCallback(({ width: wrapperWidth }, skipAnimation) => {
@@ -100,10 +100,10 @@ export default function Slider({
     if (!isReady.current) {
       isReady.current = true;
       setSlideDim(firstSlideDim);
-      setItemsPerPage(itemsPerPage);
+      setItemsPerPage(itemsPerPage as number);
     } else {
       setSlideDimDelay(firstSlideDim);
-      setItemsPerPageDelay(itemsPerPage);
+      setItemsPerPageDelay(itemsPerPage as number);
     }
 
     if (!skipAnimation) {
