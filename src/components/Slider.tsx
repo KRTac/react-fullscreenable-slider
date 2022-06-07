@@ -63,9 +63,7 @@ export default function Slider({
   const [ activeIndex, setActiveIndex ] = useState(indexProp || 0);
   const [ firstVisibleIndex, setFirstVisibleIndex ] = useState(activeIndex);
   const visibleIndex: React.MutableRefObject<number> = useRef(firstVisibleIndex);
-  const rootBounds: React.MutableRefObject<object | undefined> = useRef(undefined);
   const sliderRef: React.MutableRefObject<HTMLDivElement | null> = useRef(null);
-  const [ dragBounds, setDragBounds ] = useState<Object | undefined>(DEFAULT_BOUNDS);
   const [ sliderSpringStyles, sliderSpring ] = useSpring(() => ({ x: 0 }));
   const [ itemSpringStyles, itemSprings ] = useSprings(childrenCount, () => ({
     x: 0,
@@ -250,23 +248,6 @@ export default function Slider({
         });
 
         return memo;
-      },
-      onPointerDownCapture: ({ event }) => {
-        const eventTargetIndex = getAnimationTargetIndex(event.target as HTMLElement, animatedChildRefs.current);
-        
-        if (itemSpringStyles[eventTargetIndex] && itemSpringStyles[eventTargetIndex].scale.get() !== 1) {
-          rootBounds.current = dragBounds;
-
-          setDragBounds(undefined);
-        } else {
-          rootBounds.current = undefined;
-        }
-      },
-      onPointerUpCapture: () => {
-        if (rootBounds.current) {
-          setDragBounds(rootBounds.current);
-          rootBounds.current = undefined;
-        }
       }
     },
     {
@@ -275,10 +256,42 @@ export default function Slider({
       drag: {
         filterTaps: true,
         preventDefault: true,
-        bounds: dragBounds,
-        rubberband: !!dragBounds,
-        from: () => {
-          if (rootBounds.current) {
+        bounds: ({ event }) => {
+          const bounds = { top: -Infinity, bottom: Infinity, left: -Infinity, right: Infinity };
+          const eventTargetIndex = getAnimationTargetIndex(event.target as HTMLElement, animatedChildRefs.current);
+          
+          if (
+            animatedChildRefs.current[eventTargetIndex] &&
+            itemSpringStyles[eventTargetIndex] &&
+            itemSpringStyles[eventTargetIndex].scale.get() !== 1
+          ) {
+            // const itemRect = animatedChildRefs.current[eventTargetIndex].getBoundingClientRect();
+            
+            // bounds.left = (itemRect.width - slideDim) / -2;
+            // bounds.right = -bounds.left;
+
+            return bounds;
+          }
+
+          let left = slideDim * childrenCount - slideDim * itemsPerPage;
+      
+          if (left <= 0) {
+            left = 0;
+          } else {
+            left = -left;
+          }
+      
+          return { ...DEFAULT_BOUNDS, left };
+        },
+        rubberband: true,
+        from: ({ target }) => {
+          const eventTargetIndex = getAnimationTargetIndex(target as HTMLElement, animatedChildRefs.current);
+          
+          if (
+            animatedChildRefs.current[eventTargetIndex] &&
+            itemSpringStyles[eventTargetIndex] &&
+            itemSpringStyles[eventTargetIndex].scale.get() !== 1
+          ) {
             return [ 0, 0 ];
           }
 
@@ -319,16 +332,6 @@ export default function Slider({
     sliderSpring.start({
       x: slideDim * -visibleIndex.current
     });
-
-    let left = slideDim * children.length - slideDim * itemsPerPage;
-
-    if (left <= 0) {
-      left = 0;
-    } else {
-      left = -left;
-    }
-
-    setDragBounds({ ...DEFAULT_BOUNDS, left });
   }, [ slideDim, children, sliderSpring, itemsPerPage, activeIndex ]);
 
   useEffect(() => {
