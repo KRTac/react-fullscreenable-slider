@@ -163,7 +163,7 @@ export default function Slider({
         let newIndex = Math.round(Math.abs(offset[0]) / slideDim);
 
         if (!down) {
-          const speedBasedDelta = Math.round(velocity[0] / 4);
+          const speedBasedDelta = Math.round(velocity[0] / 2);
 
           newIndex += movement[0] < 0 ? speedBasedDelta : -speedBasedDelta;
         }
