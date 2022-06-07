@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState, useMemo, useCallback } from 'react';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { createUseGesture, dragAction, pinchAction } from '@use-gesture/react';
 import { useSpring, useSprings, animated } from '@react-spring/web';
 import useResizeObserver from '@react-hook/resize-observer';
@@ -127,7 +127,7 @@ export default function Slider({
 
   useGesture(
     {
-      onDrag: ({ down, movement, velocity, pinching, cancel, memo, target, ...rest }) => {
+      onDrag: ({ down, movement, velocity, pinching, cancel, memo, target, offset }) => {
         if (pinching || slideDim <= 0 || childrenCount === 0) {
           return cancel();
         }
@@ -160,32 +160,12 @@ export default function Slider({
           return down ? memo : undefined;
         }
 
-        const movementIndexDelta = Math.abs(movement[0]) / slideDim;
-        let indexDelta = Math.floor(movementIndexDelta);
-
-        if (movementIndexDelta % 1 > .6) {
-          indexDelta += 1;
-        }
+        let newIndex = Math.round(Math.abs(offset[0]) / slideDim);
 
         if (!down) {
-          const speedBasedDelta = velocity[0] / 4;
-          indexDelta += Math.floor(speedBasedDelta);
+          const speedBasedDelta = Math.round(velocity[0] / 4);
 
-          if (speedBasedDelta % 1 > .6) {
-            indexDelta += 1;
-          }
-        }
-
-        if (movement[0] > 0) {
-          indexDelta *= -1
-        }
-
-        let newIndex = visibleIndex.current + indexDelta;
-        
-        if (newIndex >= childrenCount) {
-          newIndex = childrenCount - 1;
-        } else if (newIndex < 0) {
-          newIndex = 0;
+          newIndex += movement[0] < 0 ? speedBasedDelta : -speedBasedDelta;
         }
 
         if (activeIndex !== newIndex) {
@@ -216,15 +196,15 @@ export default function Slider({
           setFirstVisibleIndex(newVisibleIndex);
         }
 
-        let movementDelta = movement[0];
+        let movementDelta = offset[0];
 
         if (!down) {
           visibleIndex.current = newVisibleIndex;
-          movementDelta = 0;
+          movementDelta = slideDim * -visibleIndex.current;
         }
 
         sliderSpring.start({
-          x: slideDim * -visibleIndex.current + movementDelta,
+          x: movementDelta,
           immediate: down
         });
       },
@@ -297,12 +277,12 @@ export default function Slider({
         preventDefault: true,
         bounds: dragBounds,
         rubberband: !!dragBounds,
-        from: (state) => {
+        from: () => {
           if (rootBounds.current) {
             return [ 0, 0 ];
           }
 
-          return [ slideDim * -visibleIndex.current, 0 ];
+          return [ sliderSpringStyles.x.get(), 0 ];
         }
       },
       pinch: {
