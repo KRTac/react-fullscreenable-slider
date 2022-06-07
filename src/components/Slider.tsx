@@ -6,7 +6,7 @@ import { useDebounce } from '@react-hook/debounce';
 
 import {
   resolveClassName, noop, preventEventDefault,
-  isActiveIndex, getAnimationTargetIndex
+  isVisibleIndex, getAnimationTargetIndex
 } from '../utils';
 
 
@@ -19,6 +19,7 @@ export interface SliderClassNames {
   className?: string | SliderClassNameStates;
   slideClassName?: string | SliderClassNameStates;
   activeSlideClassName?: string | SliderClassNameStates;
+  visibleSlideClassName?: string | SliderClassNameStates;
   wrapperClassName?: string | SliderClassNameStates;
   previousBtnClassName?: string | SliderClassNameStates;
   nextBtnClassName?: string | SliderClassNameStates;
@@ -32,6 +33,8 @@ export interface SliderProps {
   previousBtnLabel?: string;
   nextBtnLabel?: string;
   calculateItemsPerPage?: boolean;
+  previousBtnContent?: React.ReactElement;
+  nextBtnContent?: React.ReactElement;
 }
 export interface SliderProps extends SliderClassNames {}
 
@@ -49,15 +52,17 @@ export default function Slider({
   isLightbox = false,
   itemsPerPage: itemsPerPageProp = 1,
   children, index: indexProp = undefined,
-  className, wrapperClassName, slideClassName, activeSlideClassName,
+  className, wrapperClassName, slideClassName, activeSlideClassName, visibleSlideClassName,
   previousBtnClassName, nextBtnClassName,
   previousBtnLabel = 'Previous slide', nextBtnLabel = 'Next slide',
-  calculateItemsPerPage = true
+  calculateItemsPerPage = true,
+  previousBtnContent, nextBtnContent
 }: SliderProps) {
   const isReady = useRef(false);
   const childrenCount = (children && children.length) || 0;
-  const [ firstActiveIndex, setFirstActiveIndex ] = useState(0);
-  const currentIndexRef: React.MutableRefObject<number> = useRef(firstActiveIndex);
+  const [ activeIndex, setActiveIndex ] = useState(indexProp || 0);
+  const [ firstVisibleIndex, setFirstVisibleIndex ] = useState(activeIndex);
+  const visibleIndex: React.MutableRefObject<number> = useRef(firstVisibleIndex);
   const rootBounds: React.MutableRefObject<object | undefined> = useRef(undefined);
   const sliderRef: React.MutableRefObject<HTMLDivElement | null> = useRef(null);
   const [ dragBounds, setDragBounds ] = useState<Object | undefined>(DEFAULT_BOUNDS);
@@ -84,13 +89,13 @@ export default function Slider({
       width: firstSlideDim
     } = animatedChildRefs.current[0]?.getBoundingClientRect() || { width: 0 };
 
-    if (firstSlideDim <= 0) {
-      return;
-    }
-
     let itemsPerPage = itemsPerPageProp;
 
     if (calculateItemsPerPage) {
+      if (firstSlideDim <= 0) {
+        return;
+      }
+
       itemsPerPage = Math.round(wrapperWidth / firstSlideDim);
     } else {
       firstSlideDim = wrapperWidth / itemsPerPageProp;
@@ -107,7 +112,7 @@ export default function Slider({
 
     if (!skipAnimation) {
       sliderSpring.start({
-        x: firstSlideDim * -currentIndexRef.current
+        x: firstSlideDim * -visibleIndex.current
       });
     }
   }, [
@@ -122,8 +127,8 @@ export default function Slider({
 
   useGesture(
     {
-      onDrag: ({ down, movement, velocity, pinching, cancel, memo, target }) => {
-        if (pinching || slideDim <= 0) {
+      onDrag: ({ down, movement, velocity, pinching, cancel, memo, target, ...rest }) => {
+        if (pinching || slideDim <= 0 || childrenCount === 0) {
           return cancel();
         }
 
@@ -175,19 +180,31 @@ export default function Slider({
           indexDelta *= -1
         }
 
-        let newIndex = currentIndexRef.current + indexDelta;
+        let newIndex = visibleIndex.current + indexDelta;
         
-        if (newIndex > childrenCount - itemsPerPage) {
-          newIndex = childrenCount - itemsPerPage;
-        }
-
-        if (newIndex < 0) {
+        if (newIndex >= childrenCount) {
+          newIndex = childrenCount - 1;
+        } else if (newIndex < 0) {
           newIndex = 0;
         }
 
-        if (firstActiveIndex !== newIndex) {
+        if (activeIndex !== newIndex) {
+          setActiveIndex(newIndex);
+        }
+
+        let newVisibleIndex = newIndex;
+        
+        if (newVisibleIndex > childrenCount - itemsPerPage) {
+          newVisibleIndex = childrenCount - itemsPerPage;
+        }
+
+        if (newVisibleIndex < 0) {
+          newVisibleIndex = 0;
+        }
+
+        if (firstVisibleIndex !== newVisibleIndex) {
           itemSprings.start(idx => {
-            if (!isActiveIndex(idx, newIndex, itemsPerPage)) {
+            if (!isVisibleIndex(idx, newVisibleIndex, itemsPerPage)) {
               return {
                 x: 0,
                 y: 0,
@@ -196,18 +213,18 @@ export default function Slider({
             }
           });
 
-          setFirstActiveIndex(newIndex);
+          setFirstVisibleIndex(newVisibleIndex);
         }
 
         let movementDelta = movement[0];
 
         if (!down) {
-          currentIndexRef.current = newIndex;
+          visibleIndex.current = newVisibleIndex;
           movementDelta = 0;
         }
 
         sliderSpring.start({
-          x: slideDim * -currentIndexRef.current + movementDelta,
+          x: slideDim * -visibleIndex.current + movementDelta,
           immediate: down
         });
       },
@@ -279,7 +296,14 @@ export default function Slider({
         filterTaps: true,
         preventDefault: true,
         bounds: dragBounds,
-        rubberband: !!dragBounds
+        rubberband: !!dragBounds,
+        from: (state) => {
+          if (rootBounds.current) {
+            return [ 0, 0 ];
+          }
+
+          return [ slideDim * -visibleIndex.current, 0 ];
+        }
       },
       pinch: {
         scaleBounds: { min: .5, max: 5 }
@@ -292,15 +316,20 @@ export default function Slider({
       return;
     }
 
-    let newMaxIndex = children.length - itemsPerPage;
-
-    if (newMaxIndex < 0) {
-      newMaxIndex = 0;
+    let maxIndex = children.length - 1;
+    if (activeIndex > maxIndex) {
+      setActiveIndex(maxIndex);
     }
 
-    if (currentIndexRef.current > newMaxIndex) {
-      setFirstActiveIndex(newMaxIndex);
-      currentIndexRef.current = newMaxIndex;
+    let maxVisibleIndex = children.length - itemsPerPage;
+
+    if (maxVisibleIndex < 0) {
+      maxVisibleIndex = 0;
+    }
+
+    if (visibleIndex.current > maxVisibleIndex) {
+      setFirstVisibleIndex(maxVisibleIndex);
+      visibleIndex.current = maxVisibleIndex;
     }
 
     if (slideDim <= 0) {
@@ -308,7 +337,7 @@ export default function Slider({
     }
 
     sliderSpring.start({
-      x: slideDim * -currentIndexRef.current
+      x: slideDim * -visibleIndex.current
     });
 
     let left = slideDim * children.length - slideDim * itemsPerPage;
@@ -320,7 +349,7 @@ export default function Slider({
     }
 
     setDragBounds({ ...DEFAULT_BOUNDS, left });
-  }, [ slideDim, children, sliderSpring, itemsPerPage ]);
+  }, [ slideDim, children, sliderSpring, itemsPerPage, activeIndex ]);
 
   useEffect(() => {
     document.addEventListener('gesturestart', preventEventDefault);
@@ -343,7 +372,7 @@ export default function Slider({
       document.removeEventListener('gestureend', preventEventDefault);
       window.removeEventListener('resize', onResize);
     };
-  }, []);
+  }, [ updateSlideDim ]);
 
   useEffect(() => {
     if (!sliderRef.current) {
@@ -363,6 +392,50 @@ export default function Slider({
     animatedChildRefs.current = animatedChildRefs.current.slice(0, children.length);
   }, [ children ]);
 
+  const updateActiveIndex = useCallback((index) => {
+    let newIndex = index % childrenCount;
+
+    if (newIndex < 0) {
+      newIndex = childrenCount + newIndex;
+    }
+
+    if (activeIndex !== newIndex) {
+      setActiveIndex(newIndex);
+    }
+
+    let newVisibleIndex = newIndex;
+    
+    if (newVisibleIndex > childrenCount - itemsPerPage) {
+      newVisibleIndex = childrenCount - itemsPerPage;
+    }
+
+    if (newVisibleIndex < 0) {
+      newVisibleIndex = 0;
+    }
+
+    if (firstVisibleIndex !== newVisibleIndex) {
+      itemSprings.start(idx => {
+        if (!isVisibleIndex(idx, newVisibleIndex, itemsPerPage)) {
+          return {
+            x: 0,
+            y: 0,
+            scale: 1
+          };
+        }
+      });
+
+      setFirstVisibleIndex(newVisibleIndex);
+      visibleIndex.current = newVisibleIndex;
+    }
+
+    sliderSpring.start({
+      x: slideDim * -visibleIndex.current
+    });
+  }, [
+    childrenCount, activeIndex, itemsPerPage, firstVisibleIndex,
+    itemSprings, sliderSpring
+  ]);
+
   if (itemsPerPage < 1) {
     // TODO warn about itemsPerPage being below 1
     return null;
@@ -375,11 +448,13 @@ export default function Slider({
           {React.Children.map(children || [], (child, idx) => (
             <div
               key={(typeof child === 'object' && child.key) || idx}
-              className={(
-                isActiveIndex(idx, firstActiveIndex, itemsPerPage)
-                  ? resolveClassName(activeSlideClassName, isLightbox)
-                  : resolveClassName(slideClassName, isLightbox)
-              )}
+              className={resolveClassName((
+                idx === activeIndex
+                  ? activeSlideClassName
+                  : isVisibleIndex(idx, firstVisibleIndex, itemsPerPage)
+                    ? visibleSlideClassName
+                    : slideClassName
+              ), isLightbox)}
             >
               <animated.div
                 style={itemSpringStyles[idx]}
@@ -393,23 +468,23 @@ export default function Slider({
       </div>
       <span
         className={resolveClassName(previousBtnClassName, isLightbox)}
-        onClick={noop}
+        onClick={() => updateActiveIndex(activeIndex - 1)}
         aria-label={previousBtnLabel}
         tabIndex={0}
         role="button"
         onKeyPress={noop}
       >
-        
+        {previousBtnContent}
       </span>
       <span
         className={resolveClassName(nextBtnClassName, isLightbox)}
-        onClick={noop}
+        onClick={() => updateActiveIndex(activeIndex + 1)}
         aria-label={nextBtnLabel}
         tabIndex={0}
         role="button"
         onKeyPress={noop}
       >
-        
+        {nextBtnContent}
       </span>
     </div>
   );

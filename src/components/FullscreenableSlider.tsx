@@ -12,14 +12,14 @@ export interface ModalClassNameObject {
   beforeClose: string;
 }
 
-interface FullscreenableSliderClassNames {
+export interface FullscreenableSliderClassNames {
   modalClassName?: string | ModalClassNameObject;
   modalOverlayClassName?: string | ModalClassNameObject;
   modalPortalClassName?: string;
   modalBodyOpenClassName?: string;
   modalHtmlOpenClassName?: string;
 }
-interface FullscreenableSliderClassNames extends SliderClassNames {}
+export interface FullscreenableSliderClassNames extends SliderClassNames {}
 
 interface FullscreenableSliderProps {
   index?: number;
@@ -36,7 +36,9 @@ function FullscreenableSlider({
   label,
   itemsPerPage,
   disableLightbox = false,
-  className, wrapperClassName, slideClassName, activeSlideClassName,
+  className, wrapperClassName,
+  slideClassName, activeSlideClassName, visibleSlideClassName,
+  previousBtnClassName, nextBtnClassName,
   modalClassName, modalOverlayClassName, modalPortalClassName,
   modalBodyOpenClassName, modalHtmlOpenClassName,
   calculateItemsPerPage
@@ -137,7 +139,10 @@ function FullscreenableSlider({
             className={className}
             slideClassName={slideClassName}
             activeSlideClassName={activeSlideClassName}
+            visibleSlideClassName={visibleSlideClassName}
             wrapperClassName={wrapperClassName}
+            previousBtnClassName={previousBtnClassName}
+            nextBtnClassName={nextBtnClassName}
             itemsPerPage={itemsPerPage}
             calculateItemsPerPage={calculateItemsPerPage}
             isLightbox
@@ -150,7 +155,10 @@ function FullscreenableSlider({
         className={className}
         slideClassName={slideClassName}
         activeSlideClassName={activeSlideClassName}
+        visibleSlideClassName={visibleSlideClassName}
         wrapperClassName={wrapperClassName}
+        previousBtnClassName={previousBtnClassName}
+        nextBtnClassName={nextBtnClassName}
         itemsPerPage={itemsPerPage}
         calculateItemsPerPage={calculateItemsPerPage}
       >
