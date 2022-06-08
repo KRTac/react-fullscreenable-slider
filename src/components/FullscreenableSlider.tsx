@@ -18,9 +18,9 @@ export interface FullscreenableSliderClassNames {
    * override the default element styes applied by `react-modal`.
    * 
    * It can also be an object with `base`, `afterOpen` and `beforeClose` keys.
-   * See
-   * [react-modal's docs](https://reactcommunity.org/react-modal/styles/classes/)
-   * for details.
+   * See [`react-modal`'s docs][1] for details.
+   * 
+   * [1]: https://reactcommunity.org/react-modal/styles/classes/
    */
   modalClassName?: string | ModalClassNameObject;
 
@@ -29,9 +29,9 @@ export interface FullscreenableSliderClassNames {
    * override the default element styes applied by `react-modal`.
    * 
    * It can also be an object with `base`, `afterOpen` and `beforeClose` keys.
-   * See
-   * [react-modal's docs](https://reactcommunity.org/react-modal/styles/classes/)
-   * for details.
+   * See [`react-modal`'s docs][1] for details.
+   * 
+   * [1]: https://reactcommunity.org/react-modal/styles/classes/
    */
   modalOverlayClassName?: string | ModalClassNameObject;
 
@@ -51,8 +51,7 @@ export interface FullscreenableSliderClassNames {
   modalBodyOpenClassName?: string;
 
   /**
-   * Class attached to the `html` element in fullscreen mode. Defaults to the
-   * value set by `react-modal`.
+   * Class attached to the `html` element in fullscreen mode.
    * 
    * **Note:** Due to the implementation of this prop in `react-modal`, it can
    * only be a single class name.
@@ -62,9 +61,24 @@ export interface FullscreenableSliderClassNames {
 export interface FullscreenableSliderClassNames extends SliderClassNames {}
 
 interface FullscreenableSliderProps {
-  index?: number;
-  label?: string;
-  disableLightbox?: boolean;
+  /**
+   * A text describing the content of the lightbox modal. It gets passed to
+   * [`react-modal`'s contentLabel][1]. This is important for
+   * [screen reader accessibility][2].
+   * 
+   * [1]: http://reactcommunity.org/react-modal/accessibility/#aria
+   * [2]: https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Attributes/aria-label
+   */
+  modalLabel?: string;
+
+  /**
+   * Enables the lightbox functionality.
+   */
+  withLightbox?: boolean;
+
+  /**
+   * Standard react children prop.
+   */
   children?: React.ReactNode;
 }
 interface FullscreenableSliderProps extends Omit<
@@ -76,9 +90,9 @@ interface FullscreenableSliderProps extends FullscreenableSliderClassNames {}
 
 function FullscreenableSlider({
   children,
-  label,
+  modalLabel,
   itemsPerPage,
-  disableLightbox = false,
+  withLightbox,
   className, wrapperClassName,
   slideClassName, activeSlideClassName, visibleSlideClassName,
   previousBtnClassName, nextBtnClassName,
@@ -103,7 +117,10 @@ function FullscreenableSlider({
         if (Array.isArray(sources)) {
           let idx = 0;
           for (const source of sources) {
-            if (typeof source === 'object' && typeof source.props === 'object') {
+            if (
+              typeof source === 'object' &&
+              typeof source.props === 'object'
+            ) {
               if (source.props['data-fullscreen']) {
                 lightboxSources.push(React.cloneElement(source, {
                   key: `.${idx++}`
@@ -178,10 +195,10 @@ function FullscreenableSlider({
 
   return (
     <>
-      {!disableLightbox && lightboxIndex > -1 && (
+      {withLightbox && lightboxIndex > -1 && (
         <Modal
           isOpen
-          contentLabel={label}
+          contentLabel={modalLabel}
           onRequestClose={() => setLightboxIndex(-1)}
           className={modalClassName}
           overlayClassName={modalOverlayClassName}
@@ -219,5 +236,10 @@ function FullscreenableSlider({
     </>
   );
 }
+
+FullscreenableSlider.defaultProps = {
+  ...Slider.defaultProps,
+  withLightbox: false
+};
 
 export default FullscreenableSlider;

@@ -94,7 +94,7 @@
   }
 }
 
-@media (min-width: 800px) {
+@media (min-width: 900px) {
   .fullscreenable-slider .slide-wrapper {
     width: calc(100% / 3);
   }
