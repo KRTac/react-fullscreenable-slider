@@ -13,10 +13,50 @@ export interface ModalClassNameObject {
 }
 
 export interface FullscreenableSliderClassNames {
+  /**
+   * Class attached to the modal element in fullscreen mode. If set, it will
+   * override the default element styes applied by `react-modal`.
+   * 
+   * It can also be an object with `base`, `afterOpen` and `beforeClose` keys.
+   * See
+   * [react-modal's docs](https://reactcommunity.org/react-modal/styles/classes/)
+   * for details.
+   */
   modalClassName?: string | ModalClassNameObject;
+
+  /**
+   * Class attached to the overlay element in fullscreen mode. If set, it will
+   * override the default element styes applied by `react-modal`.
+   * 
+   * It can also be an object with `base`, `afterOpen` and `beforeClose` keys.
+   * See
+   * [react-modal's docs](https://reactcommunity.org/react-modal/styles/classes/)
+   * for details.
+   */
   modalOverlayClassName?: string | ModalClassNameObject;
+
+  /**
+   * Class attached to the modal portal in fullscreen mode. Defaults to the
+   * value set by `react-modal`.
+   */
   modalPortalClassName?: string;
+
+  /**
+   * Class attached to the `body` element in fullscreen mode. Defaults to the
+   * value set by `react-modal`.
+   * 
+   * **Note:** Due to the implementation of this prop in `react-modal`, it can
+   * only be a single class name.
+   */
   modalBodyOpenClassName?: string;
+
+  /**
+   * Class attached to the `html` element in fullscreen mode. Defaults to the
+   * value set by `react-modal`.
+   * 
+   * **Note:** Due to the implementation of this prop in `react-modal`, it can
+   * only be a single class name.
+   */
   modalHtmlOpenClassName?: string;
 }
 export interface FullscreenableSliderClassNames extends SliderClassNames {}
@@ -27,7 +67,10 @@ interface FullscreenableSliderProps {
   disableLightbox?: boolean;
   children?: React.ReactNode;
 }
-interface FullscreenableSliderProps extends Omit<SliderProps, 'children' | 'lightboxMode'> {}
+interface FullscreenableSliderProps extends Omit<
+  SliderProps,
+  'children' | 'lightboxMode'
+> {}
 interface FullscreenableSliderProps extends FullscreenableSliderClassNames {}
 
 
@@ -62,12 +105,16 @@ function FullscreenableSlider({
           for (const source of sources) {
             if (typeof source === 'object' && typeof source.props === 'object') {
               if (source.props['data-fullscreen']) {
-                lightboxSources.push(React.cloneElement(source, { key: `.${idx++}` }));
+                lightboxSources.push(React.cloneElement(source, {
+                  key: `.${idx++}`
+                }));
 
                 continue;
               }
 
-              mainSources.push(React.cloneElement(source, { key: `.${idx++}` }));
+              mainSources.push(React.cloneElement(source, {
+                key: `.${idx++}`
+              }));
             }
           }
         }
@@ -77,12 +124,20 @@ function FullscreenableSlider({
         body.push(React.cloneElement(childEl, undefined, mainSources));
 
         if (lightboxSources.length > 0) {
-          lightboxBody.push(React.cloneElement(childEl, { id: undefined }, lightboxSources));
+          lightboxBody.push(React.cloneElement(
+            childEl,
+            { id: undefined },
+            lightboxSources
+          ));
 
           break;
         }
 
-        lightboxBody.push(React.cloneElement(childEl, { id: undefined }, mainSources));
+        lightboxBody.push(React.cloneElement(
+          childEl,
+          { id: undefined },
+          mainSources
+        ));
 
         break;
       

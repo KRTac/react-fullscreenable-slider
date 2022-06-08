@@ -8,8 +8,8 @@ const CSS_PROPS: FullscreenableSliderClassNames = {
     fullscreen: 'fullscreenable-slider fullscreen'
   },
   slideClassName: 'slide-wrapper',
-  activeSlideClassName: 'slide-wrapper active',
-  visibleSlideClassName: 'slide-wrapper visible',
+  activeSlideClassName: 'active',
+  visibleSlideClassName: 'visible',
   wrapperClassName: 'slider',
   previousBtnClassName: 'prev-btn',
   nextBtnClassName: 'next-btn'

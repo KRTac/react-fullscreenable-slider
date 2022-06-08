@@ -16,12 +16,48 @@ export interface SliderClassNameStates {
 }
 
 export interface SliderClassNames {
+  /**
+   * Class name prop for the root element. Optionally, it can be set as an
+   * object with `base` and `fullscreen` class names.
+   */
   className?: string | SliderClassNameStates;
+
+  /**
+   * Class name prop for each slide element. Optionally, it can be set as an
+   * object with `base` and `fullscreen` class names.
+   */
   slideClassName?: string | SliderClassNameStates;
-  activeSlideClassName?: string | SliderClassNameStates;
+
+  /**
+   * Class names attached to all currently visible slides, extending the
+   * existing `slideClassName`. Optionally, it can be set as an object with
+   * `base` and `fullscreen` class names.
+   */
   visibleSlideClassName?: string | SliderClassNameStates;
+
+  /**
+   * Class names attached to the currently active slide, extending the existing
+   * `slideClassName` and `visibleSlideClassName`. Optionally, it can be
+   * set as an object with `base` and `fullscreen` class names.
+   */
+  activeSlideClassName?: string | SliderClassNameStates;
+
+  /**
+   * Class name prop for the actual slide wrapper element. Optionally, it can be
+   * set as an object with `base` and `fullscreen` class names.
+   */
   wrapperClassName?: string | SliderClassNameStates;
+
+  /**
+   * Class name prop for the previous navigation button. Optionally, it can be
+   * set as an object with `base` and `fullscreen` class names.
+   */
   previousBtnClassName?: string | SliderClassNameStates;
+
+  /**
+   * Class name prop for the next navigation button. Optionally, it can be set
+   * as an object with `base` and `fullscreen` class names.
+   */
   nextBtnClassName?: string | SliderClassNameStates;
 }
 
@@ -424,27 +460,50 @@ export default function Slider({
 
   return (
     <div className={resolveClassName(className, lightboxMode)}>
-      <div ref={sliderRef} className={resolveClassName(wrapperClassName, lightboxMode)}>
+      <div
+        ref={sliderRef}
+        className={resolveClassName(wrapperClassName, lightboxMode)}
+      >
         <animated.div style={sliderSpringStyles}>
-          {React.Children.map(children || [], (child, idx) => (
-            <div
-              key={(typeof child === 'object' && child.key) || idx}
-              className={resolveClassName((
-                idx === activeIndex
-                  ? activeSlideClassName
-                  : isVisibleIndex(idx, firstVisibleIndex, itemsPerPage)
-                    ? visibleSlideClassName
-                    : slideClassName
-              ), lightboxMode)}
-            >
-              <animated.div
-                style={itemSpringStyles[idx]}
-                ref={el => animatedChildRefs.current[idx] = el}
+          {React.Children.map(children || [], (child, idx) => {
+            let className = resolveClassName(slideClassName, lightboxMode) || '';
+
+            if (isVisibleIndex(idx, firstVisibleIndex, itemsPerPage)) {
+              const visibleClassName = resolveClassName(
+                visibleSlideClassName,
+                lightboxMode
+              );
+
+              if (visibleClassName) {
+                className += ' ' + visibleClassName;
+              }
+
+              if (idx === activeIndex) {
+                const activeClassName = resolveClassName(
+                  activeSlideClassName,
+                  lightboxMode
+                );
+  
+                if (activeClassName) {
+                  className += ' ' + activeClassName;
+                }
+              }
+            }
+
+            return (
+              <div
+                key={(typeof child === 'object' && child.key) || idx}
+                className={className}
               >
-                {child}
-              </animated.div>
-            </div>
-          ))}
+                <animated.div
+                  style={itemSpringStyles[idx]}
+                  ref={el => animatedChildRefs.current[idx] = el}
+                >
+                  {child}
+                </animated.div>
+              </div>
+            );
+          })}
         </animated.div>
       </div>
       <span
