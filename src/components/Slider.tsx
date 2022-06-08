@@ -290,6 +290,7 @@ export default function Slider({
       drag: {
         filterTaps: true,
         preventDefault: true,
+        // @ts-ignore
         bounds: ({ target }) => {
           const eventTargetIndex = getAnimationTargetIndex(target as HTMLElement, animatedChildRefs.current);
           
