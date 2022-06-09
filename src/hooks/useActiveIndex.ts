@@ -12,10 +12,10 @@ function useActiveIndex(
   const childCount = useLatest(childrenCount);
 
   const setActiveIndex = useCallback((index: number) => {
-    index = index % childrenCount;
+    index = index % childCount.current;
 
     if (index < 0) {
-      index = childrenCount + index;
+      index = childCount.current + index;
     }
 
     if (callback.current) {

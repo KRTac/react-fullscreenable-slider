@@ -7,7 +7,7 @@ import {
 } from '../utils';
 import {
   useAnimationTargets, useItemsPerPage, useAxisDimensions, useActiveIndex,
-  useViewport, useSlider
+  useViewport, useSlider, useGestures
 } from '../hooks';
 
 
@@ -230,6 +230,8 @@ function Slider({
     setItemDim
   );
 
+  const wasDragging = useRef<boolean | undefined>(undefined);
+
   const [ activeIndex, setActiveIndex ] = useActiveIndex(
     childrenCount,
     indexProp,
@@ -238,18 +240,31 @@ function Slider({
   const [ firstIndex, setFirstIndex ] = useViewport(
     activeIndex,
     childrenCount,
-    itemsPerPage
+    itemsPerPage,
+    wasDragging
   );
 
-  const [ sliderSpringStyles ] = useSlider(firstIndex, itemDim);
-  //console.log('#############################');
-  //console.log('firstIndex', firstIndex, activeIndex, itemDim);
+  const [ sliderSpringStyles, sliderApi ] = useSlider(
+    activeIndex,
+    firstIndex,
+    itemDim,
+    wasDragging,
+    childrenCount,
+    itemsPerPage,
+    setFirstIndex,
+    setActiveIndex
+  );
 
   const [ itemSpringStyles, itemSprings ] = useSprings(childrenCount, () => ({
     x: 0,
     y: 0,
     scale: 1
   }));
+
+  useGestures(
+    sliderRef, itemDim, childrenCount, itemsPerPage, animationTargets,
+    itemSpringStyles, itemSprings, sliderSpringStyles, sliderApi, wasDragging
+  );
 
   return (
     <div className={resolveClassName(className, lightboxMode)}>
