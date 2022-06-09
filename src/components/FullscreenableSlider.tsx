@@ -93,6 +93,7 @@ function FullscreenableSlider({
   modalLabel,
   itemsPerPage,
   withLightbox,
+  index, onIndexChange,
   className, wrapperClassName,
   slideClassName, activeSlideClassName, visibleSlideClassName,
   previousBtnClassName, nextBtnClassName,
@@ -230,6 +231,8 @@ function FullscreenableSlider({
         previousBtnClassName={previousBtnClassName}
         nextBtnClassName={nextBtnClassName}
         itemsPerPage={itemsPerPage}
+        index={index}
+        onIndexChange={onIndexChange}
       >
         {body}
       </Slider>

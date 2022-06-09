@@ -52,5 +52,14 @@
   "types": "dist/index.d.ts",
   "publishConfig": {
     "registry": "https://npm.pkg.github.com/KRTac"
+  },
+  "dependencies": {
+    "@react-hook/event": "^1.2.6",
+    "@react-hook/latest": "^1.0.3",
+    "@react-hook/passive-layout-effect": "^1.2.1",
+    "@react-hook/resize-observer": "^1.2.5",
+    "@react-hook/throttle": "^2.2.0",
+    "@react-spring/web": "^9.4.5",
+    "@use-gesture/react": "^10.2.15"
   }
 }
