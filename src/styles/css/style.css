@@ -1,6 +1,7 @@
 .fullscreenable-slider {
   position: relative;
   box-sizing: border-box;
+  isolation: isolate;
 }
 
 .fullscreenable-slider * {
