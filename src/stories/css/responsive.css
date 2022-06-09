@@ -16,6 +16,10 @@
   }
 }
 
+.fullscreenable-slider .slider {
+  background: rgb(194, 194, 194);
+}
+
 .fullscreenable-slider .slide-wrapper img {
   padding: .25rem;
 }
