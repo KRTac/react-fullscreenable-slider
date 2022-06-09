@@ -27,7 +27,11 @@ function useAxisDimensions(
       animationTargets.current.length > 0 &&
       animationTargets.current[0]
     ) {
-      setItemDim(animationTargets.current[0].getBoundingClientRect().width);
+      const parent = animationTargets.current[0].parentElement;
+
+      if (parent) {
+        setItemDim(parent.getBoundingClientRect().width);
+      }
     }
   });
 

@@ -242,8 +242,8 @@ function Slider({
   );
 
   const [ sliderSpringStyles ] = useSlider(firstIndex, itemDim);
-  console.log('#############################');
-  console.log('firstIndex', firstIndex, activeIndex, itemDim);
+  //console.log('#############################');
+  //console.log('firstIndex', firstIndex, activeIndex, itemDim);
 
   const [ itemSpringStyles, itemSprings ] = useSprings(childrenCount, () => ({
     x: 0,
