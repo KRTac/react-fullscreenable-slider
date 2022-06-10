@@ -1,28 +1,25 @@
-# react-fullscreenable-slider
+# react-responsive-slider
 
-A swipeable image slider with integrated lightbox and fullscreen functionality.
+A responsive content slider with integrated lightbox and fullscreen
+functionality.
+
 Work in progress, not ready for production.
 
 ## Development
 
-`react-swipeable-views` currently still doesn't list react 18 in it's deps, so
-install react 17.
+Install using the `--legacy-peer-deps` option for `npm` and run storybook:
 
-Install the peer dependencies with the `--no-save` flag:
-
-```
-npm install @react-hook/debounce react@^17 react-dom@^17 react-is react-modal react-swipeable-views react-swipeable-views-utils --no-save
-```
-
-And then the rest from `package.json` and run storybook:
-
-```
-npm install
+```sh
+npm install --legacy-peer-deps
 npm run storybook
 ```
 
+**Note:** `--legacy-peer-deps` is needed because of an old peer dependencie for
+react in `@mdx-js/react`.
+
+
 ### Build
 
-```
+```sh
 npm run rollup
 ```

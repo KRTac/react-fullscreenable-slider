@@ -1,7 +1,7 @@
 {
-  "name": "@krtac/react-fullscreenable-slider",
+  "name": "@krtac/react-responsive-slider",
   "version": "0.0.1",
-  "description": "A swipeable image slider with integrated lightbox and fullscreen functionality",
+  "description": "A responsive content slider with integrated lightbox and fullscreen functionality",
   "scripts": {
     "rollup": "rollup -c",
     "storybook": "start-storybook -p 6006",
@@ -11,22 +11,21 @@
   "license": "MIT",
   "devDependencies": {
     "@babel/core": "^7.18.2",
+    "@mdx-js/react": "^1.6.22",
     "@rollup/plugin-commonjs": "^22.0.0",
     "@rollup/plugin-node-resolve": "^13.3.0",
     "@rollup/plugin-typescript": "^8.3.2",
-    "@storybook/addon-actions": "^6.5.5",
-    "@storybook/addon-essentials": "^6.5.5",
-    "@storybook/addon-interactions": "^6.5.5",
-    "@storybook/addon-links": "^6.5.5",
-    "@storybook/builder-webpack5": "^6.5.5",
-    "@storybook/manager-webpack5": "^6.5.5",
-    "@storybook/react": "^6.5.5",
+    "@storybook/addon-actions": "^6.5.8",
+    "@storybook/addon-essentials": "^6.5.8",
+    "@storybook/addon-interactions": "^6.5.8",
+    "@storybook/addon-links": "^6.5.8",
+    "@storybook/builder-webpack5": "^6.5.8",
+    "@storybook/manager-webpack5": "^6.5.8",
+    "@storybook/react": "^6.5.8",
     "@storybook/testing-library": "^0.0.11",
-    "@types/react": "^17.0.0",
+    "@types/react": "^18.0.12",
     "@types/react-is": "^17.0.3",
     "@types/react-modal": "^3.13.1",
-    "@types/react-swipeable-views": "^0.13.1",
-    "@types/react-swipeable-views-utils": "^0.13.3",
     "babel-loader": "^8.2.5",
     "rollup": "^2.74.1",
     "rollup-plugin-dts": "^4.2.2",
@@ -34,15 +33,6 @@
     "rollup-plugin-postcss": "^4.0.2",
     "rollup-plugin-terser": "^7.0.2",
     "typescript": "^4.7.2"
-  },
-  "peerDependencies": {
-    "@react-hook/debounce": "^4.0.0",
-    "react": "^17",
-    "react-dom": "^17",
-    "react-is": "^18.1.0",
-    "react-modal": "^3.15.1",
-    "react-swipeable-views": "^0.14.0",
-    "react-swipeable-views-utils": "^0.14.0"
   },
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
@@ -60,6 +50,11 @@
     "@react-hook/resize-observer": "^1.2.5",
     "@react-hook/throttle": "^2.2.0",
     "@react-spring/web": "^9.4.5",
-    "@use-gesture/react": "^10.2.15"
+    "@types/react-dom": "^18.0.5",
+    "@use-gesture/react": "^10.2.15",
+    "react": "^18.1.0",
+    "react-dom": "^17.0.2",
+    "react-is": "^18.1.0",
+    "react-modal": "^3.15.1"
   }
 }
