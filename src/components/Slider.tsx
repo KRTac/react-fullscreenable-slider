@@ -1,12 +1,12 @@
 import React, { useRef } from 'react';
-import { useSprings, animated } from '@react-spring/web';
+import { animated } from '@react-spring/web';
 
 import {
   resolveClassName, noop, isVisibleIndex
 } from '../utils';
 import {
   useAnimationTargets, useItemsPerPage, useAxisDimensions, useActiveIndex,
-  useViewport, useSlider, useGestures, useBlockSafariGestures
+  useViewport, useSlider, useGestures, useBlockSafariGestures, useItemSprings
 } from '../hooks';
 
 
@@ -245,11 +245,11 @@ function Slider({
     setActiveIndex
   );
 
-  const [ itemSpringStyles, itemSprings ] = useSprings(childrenCount, () => ({
-    x: 0,
-    y: 0,
-    scale: 1
-  }));
+  const [ itemSpringStyles, itemSprings ] = useItemSprings(
+    childrenCount,
+    firstIndex,
+    itemsPerPage
+  );
 
   useGestures(
     sliderRef, itemDim, childrenCount, itemsPerPage, animationTargets,
