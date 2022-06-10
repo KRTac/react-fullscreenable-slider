@@ -1,7 +1,7 @@
 import React from 'react';
 import { ComponentStory, ComponentMeta } from '@storybook/react';
 
-import { FullscreenableSlider as FsSlider } from '..';
+import { Slider } from '..';
 import { getClassNameProps } from '../styles/css';
 import { generateImgElements } from './assets/unsplash';
 import './css/responsive.css';
@@ -9,15 +9,17 @@ import './css/responsive.css';
 
 export default {
   title: 'Examples/Responsive',
-  component: FsSlider
-} as ComponentMeta<typeof FsSlider>;
+  component: Slider
+} as ComponentMeta<typeof Slider>;
 
-const StandardTemplate: ComponentStory<typeof FsSlider> = (props) => {
+const imgChildren = generateImgElements();
+
+const StandardTemplate: ComponentStory<typeof Slider> = (props) => {
   return (
     <div style={{ width: '100%', maxWidth: '1110px', margin: '0 auto' }}>
-      <FsSlider {...props}>
-        {generateImgElements()}
-      </FsSlider>
+      <Slider {...props}>
+        {imgChildren}
+      </Slider>
     </div>
   );
 };

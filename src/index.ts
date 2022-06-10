@@ -1,1 +1,1 @@
-export { default as FullscreenableSlider } from './components/FullscreenableSlider';
+export { default as Slider } from './components/FullscreenableSlider';

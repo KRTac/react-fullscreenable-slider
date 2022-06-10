@@ -4,15 +4,15 @@ import './style.css';
 
 const CSS_PROPS: FullscreenableSliderClassNames = {
   className: {
-    base: 'fullscreenable-slider',
-    fullscreen: 'fullscreenable-slider fullscreen'
+    base: 'rrslider-root',
+    fullscreen: 'rrslider-root fullscreen'
   },
-  slideClassName: 'slide-wrapper',
+  slideClassName: 'rrslider-slide-wrapper',
   activeSlideClassName: 'active',
   visibleSlideClassName: 'visible',
-  wrapperClassName: 'slider',
-  previousBtnClassName: 'prev-btn',
-  nextBtnClassName: 'next-btn'
+  wrapperClassName: 'rrslider-slider',
+  previousBtnClassName: 'rrslider-prev-btn',
+  nextBtnClassName: 'rrslider-next-btn'
 };
 
 export function getClassNameProps(): FullscreenableSliderClassNames {

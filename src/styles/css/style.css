@@ -1,14 +1,14 @@
-.fullscreenable-slider {
+.rrslider-root {
   position: relative;
   box-sizing: border-box;
   isolation: isolate;
 }
 
-.fullscreenable-slider * {
+.rrslider-root * {
   box-sizing: border-box;
 }
 
-.fullscreenable-slider .slider {
+.rrslider-root .rrslider-slider {
   position: relative;
   overflow-x: hidden;
   touch-action: none;
@@ -17,7 +17,7 @@
   border: 0;
 }
 
-.fullscreenable-slider .slider > div {
+.rrslider-root .rrslider-slider > div {
   display: flex;
   flex-direction: row;
   margin: 0;
@@ -25,7 +25,7 @@
   border: 0;
 }
 
-.fullscreenable-slider .slide-wrapper {
+.rrslider-root .rrslider-slide-wrapper {
   flex-shrink: 0;
   margin: 0;
   position: relative;
@@ -37,13 +37,13 @@
   will-change: transform;
 }
 
-.fullscreenable-slider .slide-wrapper > div > img {
+.rrslider-root .rrslider-slide-wrapper > div > img {
   max-width: 100%;
   display: block;
 }
 
-.fullscreenable-slider .prev-btn,
-.fullscreenable-slider .next-btn {
+.rrslider-root .rrslider-prev-btn,
+.rrslider-root .rrslider-next-btn {
   position: absolute;
   display: flex;
   justify-content: center;
@@ -58,33 +58,33 @@
   transition: background-color ease-out .2s;
 }
 
-.fullscreenable-slider .prev-btn:hover,
-.fullscreenable-slider .next-btn:hover {
+.rrslider-root .rrslider-prev-btn:hover,
+.rrslider-root .rrslider-next-btn:hover {
   background-color: rgba(0, 0, 0, .3);
 }
 
-.fullscreenable-slider .prev-btn::after,
-.fullscreenable-slider .next-btn::after {
+.rrslider-root .rrslider-prev-btn::after,
+.rrslider-root .rrslider-next-btn::after {
   content: '';
   width: 1.3rem;
   height: 1.8rem;
   background: center center no-repeat;
 }
 
-.fullscreenable-slider .prev-btn {
+.rrslider-root .rrslider-prev-btn {
   left: 0;
   border-radius: 0 .5rem .5rem 0;
 }
 
-.fullscreenable-slider .prev-btn::after {
+.rrslider-root .rrslider-prev-btn::after {
   background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMCAzNSI+PHBhdGggZmlsbD0iI2ZmZmZmZiIgZD0ibTE5IDMtMi0yTDEgMTdsMTYgMTYgMS0xTDMgMTcgMTggMnoiLz48L3N2Zz4=");
 }
 
-.fullscreenable-slider .next-btn {
+.rrslider-root .rrslider-next-btn {
   right: 0;
   border-radius: .5rem 0 0 .5rem;
 }
 
-.fullscreenable-slider .next-btn::after {
+.rrslider-root .rrslider-next-btn::after {
   background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMCAzNSI+PHBhdGggZmlsbD0iI2ZmZmZmZiIgZD0ibTEgMyAyLTIgMTYgMTZMMyAzM2wtMS0xIDE1LTE1TDIgMnoiLz48L3N2Zz4=");
 }
