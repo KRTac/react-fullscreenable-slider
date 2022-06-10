@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 
+import { isVisibleIndex } from '../utils';
+
 
 function useViewport(
   activeIndex: number,
@@ -10,29 +12,28 @@ function useViewport(
   const [ firstIndex, setFirstIndex ] = useState(activeIndex);
   const lastActiveIndex = useRef(activeIndex);
 
+  const firstIndexRef = useRef(firstIndex);
+  firstIndexRef.current = firstIndex;
+
   useEffect(() => {
-    if (wasDragging.current !== undefined) {
+    if (
+      wasDragging.current !== undefined ||
+      isVisibleIndex(activeIndex, firstIndexRef.current, itemsPerPage)
+    ) {
       return;
     }
 
-    let placesBeforeCenter = Math.floor((itemsPerPage - 1) / 2);
+    let newFirst = activeIndex;
 
-    if (lastActiveIndex.current < activeIndex) {
-      // going up
-      placesBeforeCenter = Math.ceil((itemsPerPage - 1) / 2);
+    if (activeIndex >= firstIndexRef.current + itemsPerPage) {
+      newFirst = activeIndex - itemsPerPage + 1;
+
+      if (newFirst < 0) {
+        newFirst = 0;
+      }
     }
 
-    let firstIndex = activeIndex - placesBeforeCenter;
-
-    if (firstIndex + itemsPerPage > childrenCount) {
-      firstIndex = childrenCount - itemsPerPage;
-    }
-
-    if (firstIndex < 0) {
-      firstIndex = 0;
-    }
-
-    setFirstIndex(firstIndex);
+    setFirstIndex(newFirst);
   }, [ itemsPerPage, childrenCount, activeIndex, wasDragging ]);
 
   useEffect(() => {

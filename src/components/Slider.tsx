@@ -1,6 +1,5 @@
-import React, { useEffect, useRef } from 'react';
-import { createUseGesture, dragAction, pinchAction } from '@use-gesture/react';
-import { useSpring, useSprings, animated } from '@react-spring/web';
+import React, { useRef } from 'react';
+import { useSprings, animated } from '@react-spring/web';
 
 import {
   resolveClassName, noop, isVisibleIndex
@@ -192,15 +191,6 @@ export interface SliderProps {
 }
 export interface SliderProps extends SliderClassNames {}
 
-
-const DEFAULT_BOUNDS = {
-  left: 0,
-  right: 0,
-  top: 0,
-  bottom: 0
-};
-
-const useGesture = createUseGesture([ dragAction, pinchAction ]);
 
 function Slider({
   lightboxMode,
