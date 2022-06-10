@@ -11,5 +11,8 @@ module.exports = {
   "core": {
     "builder": "@storybook/builder-webpack5"
   },
-  "staticDirs": [ "../src/stories/assets" ]
+  "staticDirs": [ "../src/stories/assets" ],
+  "features": {
+    "postcss": false
+  }
 }
