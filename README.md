@@ -9,17 +9,18 @@ Work in progress, not ready for production.
 
 Install using the `--legacy-peer-deps` option for `npm` and run storybook:
 
-```sh
+```shell
 npm install --legacy-peer-deps
 npm run storybook
 ```
 
-**Note:** `--legacy-peer-deps` is needed because of an old peer dependencie for
-react in `@mdx-js/react`.
+**Note:** `--legacy-peer-deps` is needed because, at the moment of writing,
+`@mdx-js/react` (required by storybook) didn't update the referance to include
+react 18.
 
 
 ### Build
 
-```sh
+```shell
 npm run rollup
 ```
