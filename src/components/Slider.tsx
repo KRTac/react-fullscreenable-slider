@@ -6,7 +6,7 @@ import {
 } from '../utils';
 import {
   useAnimationTargets, useItemsPerPage, useAxisDimensions, useActiveIndex,
-  useViewport, useSlider, useGestures
+  useViewport, useSlider, useGestures, useBlockSafariGestures
 } from '../hooks';
 
 
@@ -255,6 +255,8 @@ function Slider({
     sliderRef, itemDim, childrenCount, itemsPerPage, animationTargets,
     itemSpringStyles, itemSprings, sliderSpringStyles, sliderApi, wasDragging
   );
+
+  useBlockSafariGestures();
 
   return (
     <div className={resolveClassName(className, lightboxMode)}>

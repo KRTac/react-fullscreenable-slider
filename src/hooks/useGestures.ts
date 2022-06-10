@@ -1,7 +1,7 @@
 import { SpringRef, SpringValue } from '@react-spring/web';
 import { createUseGesture, dragAction, pinchAction } from '@use-gesture/react';
 
-import { getAnimationTargetIndex, isVisibleIndex } from '../utils';
+import { getAnimationTargetIndex } from '../utils';
 import { useAnimationTargets } from './';
 
 
