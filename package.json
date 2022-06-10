@@ -16,7 +16,7 @@
     "serve": "gatsby serve",
     "clean": "gatsby clean",
     "storybook": "start-storybook -p 6006",
-    "build-storybook": "build-storybook -o storybook-build -s ./src/stories/assets"
+    "build-storybook": "build-storybook -o public/docs -s ./src/stories/assets"
   },
   "dependencies": {
     "gatsby": "^4.16.0",

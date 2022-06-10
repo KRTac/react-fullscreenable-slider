@@ -1,4 +1,4 @@
-name: Build Gatsby
+name: Build site
 
 on:
   push:
@@ -9,11 +9,22 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout the repo
+        uses: actions/checkout@v3
 
-      - run: |
-          npm ci --legacy-peer-deps
-          npm run build
+      - name: Setup node 16
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+
+      - name: Install packages
+        run: npm ci --legacy-peer-deps
+
+      - name: Build Gatsby
+        run: npm run build
+
+      - name: Build Storybook
+        run: npm run build-storybook
 
       - uses: JamesIves/github-pages-deploy-action@v4.3.3
         with:
