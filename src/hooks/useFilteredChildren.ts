@@ -3,7 +3,7 @@ import React, { useMemo } from 'react';
 import { filterChildren } from '../utils';
 
 
-function useChildren(
+function useFilteredChildren(
   prop: React.ReactNode
 ) {
   const children = useMemo(() => {
@@ -13,4 +13,4 @@ function useChildren(
   return children;
 }
 
-export default useChildren;
+export default useFilteredChildren;

@@ -5,7 +5,7 @@ import {
   default as SliderComponent,
   SliderComponentClassNames, SliderComponentProps
 } from './SliderComponent';
-import { useChildren } from '../hooks';
+import { useFilteredChildren } from '../hooks';
 
 
 export interface ModalClassNameObject {
@@ -103,7 +103,7 @@ function Slider({
   modalBodyOpenClassName, modalHtmlOpenClassName
 }: SliderProps) {
   const [ lightboxIndex, setLightboxIndex ] = useState(-1);
-  const [ body, lightboxBody ] = useChildren(childrenProp);
+  const [ body, lightboxBody ] = useFilteredChildren(childrenProp);
 
   const sharedProps = {
     className: className,
