@@ -31,7 +31,13 @@ function useAxisDimensions(
       const parent = animationTargets.current[0].parentElement;
 
       if (parent) {
-        setItemDim(parent.getBoundingClientRect().width);
+        const { marginLeft, marginRight } = window.getComputedStyle(parent);
+
+        setItemDim(
+          parent.getBoundingClientRect().width +
+          parseFloat(marginLeft) +
+          parseFloat(marginRight)
+        );
       }
     }
   });
