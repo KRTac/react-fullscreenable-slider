@@ -5,18 +5,19 @@ import { useThrottle } from '@react-hook/throttle';
 import useLatest from '@react-hook/latest';
 
 import { useAnimationTargets } from './';
+import { inBrowser } from '../utils';
 
 
 function useAxisDimensions(
   sliderRef: React.MutableRefObject<HTMLDivElement | null>,
   animationTargets: ReturnType<typeof useAnimationTargets>,
   itemsPerPageProp: string | number
-): [number, number, React.Dispatch<React.SetStateAction<number>>] {
+): [ number, number, React.Dispatch<React.SetStateAction<number>> ] {
   const [ sliderDim, setSliderDim ] = useThrottle(0, 15, true);
   const [ itemDim, setItemDim ] = useThrottle(0, 15, true);
 
   const sizeIt = useLatest(() => {
-    if (!sliderRef.current) {
+    if (!sliderRef.current || !inBrowser) {
       return;
     }
 
@@ -40,7 +41,7 @@ function useAxisDimensions(
   useLayoutEffect(sizeIt.current, deps);
   useResizeObserver(sliderRef, sizeIt.current);
   useEffect(() => {
-    if (typeof window === 'undefined') {
+    if (!inBrowser) {
       return;
     }
 

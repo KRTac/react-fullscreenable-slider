@@ -76,7 +76,7 @@ function useSlider(
   useEffect(() => {
     itemDimRef.current = itemDim;
     childCountRef.current = childrenCount;
-  }, [ itemDim, childrenCount ]);
+  });
 
   return [ props, api ];
 }

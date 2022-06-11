@@ -71,7 +71,7 @@ function useGestures(
         wasDragging.current = false;
 
         if (!down) {
-          let newFirstIndex = Math.round(Math.abs(offset[0]) / itemDim);
+          let newFirstIndex = Math.round(Math.abs(movementDelta) / itemDim);
           const speedBasedDelta = Math.round(velocity[0] / 2);
 
           newFirstIndex += movement[0] < 0 ? speedBasedDelta : -speedBasedDelta;
@@ -79,7 +79,7 @@ function useGestures(
           if (newFirstIndex > childrenCount - itemsPerPage) {
             newFirstIndex = childrenCount - itemsPerPage;
           }
-  
+
           if (newFirstIndex < 0) {
             newFirstIndex = 0;
           }
@@ -124,7 +124,7 @@ function useGestures(
         if (scale < .5) {
           scale = .5;
         }
-        
+
         if (!active && scale > .7 && scale < 1.3) {
           x = 0;
           y = 0;
@@ -152,7 +152,7 @@ function useGestures(
             target as HTMLElement,
             animationTargets.current
           );
-          
+
           if (
             animationTargets.current[eventTargetIndex] &&
             itemSpringStyles[eventTargetIndex] &&
@@ -167,13 +167,13 @@ function useGestures(
           }
 
           let left = itemDim * childrenCount - itemDim * itemsPerPage;
-      
+
           if (left <= 0) {
             left = 0;
           } else {
             left = -left;
           }
-      
+
           return { top: 0, bottom: 0, right: 0, left };
         },
         rubberband: true,
@@ -182,7 +182,7 @@ function useGestures(
             target as HTMLElement,
             animationTargets.current
           );
-          
+
           if (
             animationTargets.current[eventTargetIndex] &&
             itemSpringStyles[eventTargetIndex] &&

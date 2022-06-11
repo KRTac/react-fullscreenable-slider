@@ -60,7 +60,7 @@ export interface FullscreenableSliderClassNames {
 }
 export interface FullscreenableSliderClassNames extends SliderClassNames {}
 
-interface FullscreenableSliderProps {
+export interface FullscreenableSliderProps {
   /**
    * A text describing the content of the lightbox modal. It gets passed to
    * [`react-modal`'s contentLabel][1]. This is important for
@@ -81,11 +81,11 @@ interface FullscreenableSliderProps {
    */
   children?: React.ReactNode;
 }
-interface FullscreenableSliderProps extends Omit<
+export interface FullscreenableSliderProps extends Omit<
   SliderProps,
   'children' | 'lightboxMode'
 > {}
-interface FullscreenableSliderProps extends FullscreenableSliderClassNames {}
+export interface FullscreenableSliderProps extends FullscreenableSliderClassNames {}
 
 
 function FullscreenableSlider({
@@ -194,6 +194,16 @@ function FullscreenableSlider({
     }
   }
 
+  const sharedProps = {
+    className: className,
+    slideClassName: slideClassName,
+    activeSlideClassName: activeSlideClassName,
+    visibleSlideClassName: visibleSlideClassName,
+    wrapperClassName: wrapperClassName,
+    previousBtnClassName: previousBtnClassName,
+    nextBtnClassName: nextBtnClassName
+  };
+
   return (
     <>
       {withLightbox && lightboxIndex > -1 && (
@@ -208,14 +218,8 @@ function FullscreenableSlider({
           htmlOpenClassName={modalHtmlOpenClassName}
         >
           <Slider
-            className={className}
-            slideClassName={slideClassName}
-            activeSlideClassName={activeSlideClassName}
-            visibleSlideClassName={visibleSlideClassName}
-            wrapperClassName={wrapperClassName}
-            previousBtnClassName={previousBtnClassName}
-            nextBtnClassName={nextBtnClassName}
-            itemsPerPage={itemsPerPage}
+            {...sharedProps}
+            itemsPerPage={1}
             lightboxMode
           >
             {lightboxBody}
@@ -223,13 +227,7 @@ function FullscreenableSlider({
         </Modal>
       )}
       <Slider
-        className={className}
-        slideClassName={slideClassName}
-        activeSlideClassName={activeSlideClassName}
-        visibleSlideClassName={visibleSlideClassName}
-        wrapperClassName={wrapperClassName}
-        previousBtnClassName={previousBtnClassName}
-        nextBtnClassName={nextBtnClassName}
+        {...sharedProps}
         itemsPerPage={itemsPerPage}
         index={index}
         onIndexChange={onIndexChange}

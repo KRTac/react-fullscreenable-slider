@@ -188,6 +188,11 @@ export interface SliderProps {
    * Display in lightbox mode if `true`
    */
   lightboxMode?: boolean;
+
+  /**
+   * Add arbitrary props
+   */
+  [key: string]: any;
 }
 export interface SliderProps extends SliderClassNames {}
 

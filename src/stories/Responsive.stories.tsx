@@ -12,11 +12,11 @@ export default {
   component: Slider
 } as ComponentMeta<typeof Slider>;
 
-const imgChildren = generateImgElements();
+let imgChildren = generateImgElements();
 
 const StandardTemplate: ComponentStory<typeof Slider> = (props) => {
   return (
-    <div style={{ width: '100%', maxWidth: '1110px', margin: '0 auto' }}>
+    <div style={{ width: '100%', maxWidth: '1600px', margin: '0 auto' }}>
       <Slider {...props}>
         {imgChildren}
       </Slider>
