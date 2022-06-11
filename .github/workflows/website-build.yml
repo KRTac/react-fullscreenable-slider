@@ -23,7 +23,7 @@ jobs:
         run: npm ci --legacy-peer-deps
 
       - name: Build Gatsby
-        run: npm run build
+        run: npm run build-gatsby
 
       - name: Build Storybook
         run: npm run build-storybook
