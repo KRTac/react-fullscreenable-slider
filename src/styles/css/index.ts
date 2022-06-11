@@ -1,8 +1,8 @@
-import { FullscreenableSliderClassNames } from '../../components/FullscreenableSlider';
+import { SliderClassNames } from '../../components/Slider';
 import './style.css';
 
 
-const CSS_PROPS: FullscreenableSliderClassNames = {
+const CSS_PROPS: SliderClassNames = {
   className: {
     base: 'rrslider-root',
     fullscreen: 'rrslider-root fullscreen'
@@ -15,6 +15,6 @@ const CSS_PROPS: FullscreenableSliderClassNames = {
   nextBtnClassName: 'rrslider-next-btn'
 };
 
-export function getClassNameProps(): FullscreenableSliderClassNames {
+export function getClassNameProps(): SliderClassNames {
   return CSS_PROPS;
 }
