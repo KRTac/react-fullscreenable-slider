@@ -1,3 +1,4 @@
+export { default as filterChildren } from './filterChildren';
 export { default as flattenChildrenArray } from './flattenChildrenArray';
 export { default as getAnimationTargetIndex } from './getAnimationTargetIndex';
 export { default as inBrowser } from './inBrowser';
