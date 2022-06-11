@@ -11,6 +11,8 @@ jobs:
     steps:
       - name: Checkout the repo
         uses: actions/checkout@v3
+        with:
+          ref: gh-pages-dev
 
       - name: Setup node 16
         uses: actions/setup-node@v3
