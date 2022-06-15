@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Modal from 'react-modal';
+import ReactModal from 'react-modal';
 
 import {
   default as SliderComponent,
@@ -7,12 +7,6 @@ import {
 } from './SliderComponent';
 import { useFilteredChildren } from '../hooks';
 
-
-export interface ModalClassNameObject {
-  base: string;
-  afterOpen: string;
-  beforeClose: string;
-}
 
 export interface SliderClassNames {
   /**
@@ -24,7 +18,7 @@ export interface SliderClassNames {
    * 
    * [1]: https://reactcommunity.org/react-modal/styles/classes/
    */
-  modalClassName?: string | ModalClassNameObject;
+  modalClassName?: string | ReactModal.Classes;
 
   /**
    * Class attached to the overlay element in fullscreen mode. If set, it will
@@ -35,7 +29,7 @@ export interface SliderClassNames {
    * 
    * [1]: https://reactcommunity.org/react-modal/styles/classes/
    */
-  modalOverlayClassName?: string | ModalClassNameObject;
+  modalOverlayClassName?: string | ReactModal.Classes;
 
   /**
    * Class attached to the modal portal in fullscreen mode. Defaults to the
@@ -118,7 +112,7 @@ function Slider({
   return (
     <>
       {withLightbox && (
-        <Modal
+        <ReactModal
           isOpen={lightboxIndex > -1}
           contentLabel={modalLabel}
           onRequestClose={() => setLightboxIndex(-1)}
@@ -135,7 +129,7 @@ function Slider({
           >
             {lightboxBody}
           </SliderComponent>
-        </Modal>
+        </ReactModal>
       )}
       <SliderComponent
         {...sharedProps}
