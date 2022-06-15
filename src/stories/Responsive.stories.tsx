@@ -1,7 +1,7 @@
 import React from 'react';
 import { ComponentStory, ComponentMeta } from '@storybook/react';
 
-import { Slider } from '..';
+import { Slider, setModalAppElement } from '..';
 import { getClassNameProps } from '../styles/css';
 import { generateImgElements } from './assets/unsplash';
 import './css/responsive.css';
@@ -13,6 +13,7 @@ export default {
 } as ComponentMeta<typeof Slider>;
 
 let imgChildren = generateImgElements();
+setModalAppElement('#root');
 
 const StandardTemplate: ComponentStory<typeof Slider> = (props) => {
   return (

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import ReactModal from 'react-modal';
+import ReactModal, { setAppElement } from 'react-modal';
 
 import {
   default as SliderComponent,
@@ -7,6 +7,10 @@ import {
 } from './SliderComponent';
 import { useFilteredChildren } from '../hooks';
 
+
+export function setModalAppElement(appEl: string | HTMLElement) {
+  setAppElement(appEl);
+}
 
 export interface SliderClassNames {
   /**
