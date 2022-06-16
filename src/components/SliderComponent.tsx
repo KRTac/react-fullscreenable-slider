@@ -5,7 +5,7 @@ import {
   resolveClassName, noop, isVisibleIndex
 } from '../utils';
 import {
-  useAnimationTargets, useItemsPerPage, useAxisDimensions, useActiveIndex,
+  useAnimationTargets, useItemsPerPage, useAxisDimensions, useIndex,
   useViewport, useSlider, useGestures, useBlockSafariGestures, useItemSprings
 } from '../hooks';
 
@@ -227,20 +227,20 @@ function SliderComponent({
 
   const wasDragging = useRef<boolean | undefined>(undefined);
 
-  const [ activeIndex, setActiveIndex ] = useActiveIndex(
+  let [ activeIndex, setActiveIndex ] = useIndex(
     childrenCount,
     indexProp,
-    onIndexChange
+    (index) => onIndexChange && onIndexChange(index || 0)
   );
   const [ firstIndex, setFirstIndex ] = useViewport(
-    activeIndex,
+    activeIndex || 0,
     childrenCount,
     itemsPerPage,
     wasDragging
   );
 
   const [ sliderSpringStyles, sliderApi ] = useSlider(
-    activeIndex,
+    activeIndex || 0,
     firstIndex,
     itemDim,
     wasDragging,
@@ -316,7 +316,7 @@ function SliderComponent({
       </div>
       <span
         className={resolveClassName(previousBtnClassName, lightboxMode)}
-        onClick={() => setActiveIndex(activeIndex - 1)}
+        onClick={() => setActiveIndex((activeIndex || 0) - 1)}
         aria-label={previousBtnLabel}
         tabIndex={0}
         role="button"
@@ -326,7 +326,7 @@ function SliderComponent({
       </span>
       <span
         className={resolveClassName(nextBtnClassName, lightboxMode)}
-        onClick={() => setActiveIndex(activeIndex + 1)}
+        onClick={() => setActiveIndex((activeIndex || 0) + 1)}
         aria-label={nextBtnLabel}
         tabIndex={0}
         role="button"

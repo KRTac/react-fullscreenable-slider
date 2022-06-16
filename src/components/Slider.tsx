@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React from 'react';
 import ReactModal, { setAppElement } from 'react-modal';
 
 import {
   default as SliderComponent,
   SliderComponentClassNames, SliderComponentProps
 } from './SliderComponent';
-import { useFilteredChildren } from '../hooks';
+import { useFilteredChildren, useIndex } from '../hooks';
 
 
 export function setModalAppElement(appEl: string | HTMLElement) {
@@ -80,6 +80,10 @@ export interface SliderProps {
    * Standard react children prop.
    */
   children?: React.ReactNode;
+
+  lightboxIndex?: number;
+
+  onLightboxIndexChange?: (index?: number) => any;
 }
 export interface SliderProps extends Omit<
   SliderComponentProps,
@@ -94,14 +98,17 @@ function Slider({
   itemsPerPage,
   withLightbox,
   index, onIndexChange,
+  lightboxIndex: lightboxIndexProp, onLightboxIndexChange,
   className, wrapperClassName,
   slideClassName, activeSlideClassName, visibleSlideClassName,
   previousBtnClassName, nextBtnClassName,
   modalClassName, modalOverlayClassName, modalPortalClassName,
   modalBodyOpenClassName, modalHtmlOpenClassName
 }: SliderProps) {
-  const [ lightboxIndex, setLightboxIndex ] = useState(-1);
   const [ body, lightboxBody ] = useFilteredChildren(childrenProp);
+  const [
+    lightboxIndex, setLightboxIndex
+  ] = useIndex(lightboxBody.length, lightboxIndexProp, onLightboxIndexChange);
 
   const sharedProps = {
     className: className,
@@ -117,9 +124,9 @@ function Slider({
     <>
       {withLightbox && (
         <ReactModal
-          isOpen={lightboxIndex > -1}
+          isOpen={typeof lightboxIndex !== 'undefined'}
           contentLabel={modalLabel}
-          onRequestClose={() => setLightboxIndex(-1)}
+          onRequestClose={() => setLightboxIndex(undefined)}
           className={modalClassName}
           overlayClassName={modalOverlayClassName}
           portalClassName={modalPortalClassName}
@@ -129,6 +136,8 @@ function Slider({
           <SliderComponent
             {...sharedProps}
             itemsPerPage={1}
+            index={lightboxIndex}
+            onIndexChange={setLightboxIndex}
             lightboxMode
           >
             {lightboxBody}
