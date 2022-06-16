@@ -1,4 +1,4 @@
-import { SliderClassNameStates } from '../components/Slider';
+import { SliderClassNameStates } from '../components/SliderComponent';
 
 
 export default function resolveClassName(

@@ -12,6 +12,8 @@ function useSlider(
   setFirstIndex: (index: number) => void,
   setActiveIndex: (index: number) => void
 ): [ { x: SpringValue<number>; }, SpringRef<{ x: number; }> ] {
+  const initiated = useRef(false);
+
   // onChange reference doesn't get updated, using a ref as a way around it
   const itemDimRef = useRef(itemDim);
   const childCountRef = useRef(childrenCount);
@@ -69,8 +71,11 @@ function useSlider(
     wasDragging.current = undefined;
 
     api.start({
-      x: firstIndex * -itemDim
+      x: firstIndex * -itemDim,
+      immediate: !initiated.current
     });
+
+    initiated.current = true;
   }, [ firstIndex, itemDim, childrenCount, wasDragging ]);
 
   useEffect(() => {

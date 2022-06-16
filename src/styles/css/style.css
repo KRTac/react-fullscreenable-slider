@@ -88,3 +88,42 @@
 .rrslider-root .rrslider-next-btn::after {
   background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMCAzNSI+PHBhdGggZmlsbD0iI2ZmZmZmZiIgZD0ibTEgMyAyLTIgMTYgMTZMMyAzM2wtMS0xIDE1LTE1TDIgMnoiLz48L3N2Zz4=");
 }
+
+.rrslider-root.fullscreen {
+  width: 100%;
+  height: 100%;
+}
+
+.rrslider-root.fullscreen .rrslider-slider {
+  height: 100%;
+}
+
+.rrslider-root.fullscreen .rrslider-slider > div {
+  height: 100%;
+}
+
+.rrslider-root.fullscreen .rrslider-slide-wrapper {
+  width: 100%;
+}
+
+.rrslider-root.fullscreen .rrslider-slide-wrapper > div > img {
+  max-height: 100vh;
+}
+
+.rrslider-overlay {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  background: rgb(0 0 0 / .9);
+}
+
+.rrslider-modal {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}

@@ -8,11 +8,19 @@ const CSS_PROPS: SliderClassNames = {
     fullscreen: 'rrslider-root fullscreen'
   },
   slideClassName: 'rrslider-slide-wrapper',
-  activeSlideClassName: 'active',
-  visibleSlideClassName: 'visible',
+  activeSlideClassName: {
+    base: 'active',
+    fullscreen: ''
+  },
+  visibleSlideClassName: {
+    base: 'visible',
+    fullscreen: ''
+  },
   wrapperClassName: 'rrslider-slider',
   previousBtnClassName: 'rrslider-prev-btn',
-  nextBtnClassName: 'rrslider-next-btn'
+  nextBtnClassName: 'rrslider-next-btn',
+  modalOverlayClassName: 'rrslider-overlay',
+  modalClassName: 'rrslider-modal'
 };
 
 export function getClassNameProps(): SliderClassNames {
