@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import ReactModal, { setAppElement } from 'react-modal';
+import useLatest from '@react-hook/latest';
 
 import {
   default as SliderComponent,
@@ -99,6 +100,7 @@ function Slider({
   withLightbox,
   index, onIndexChange,
   lightboxIndex: lightboxIndexProp, onLightboxIndexChange,
+  onItemClick,
   className, wrapperClassName,
   slideClassName, activeSlideClassName, visibleSlideClassName,
   previousBtnClassName, nextBtnClassName,
@@ -109,6 +111,18 @@ function Slider({
   const [
     lightboxIndex, setLightboxIndex
   ] = useIndex(lightboxBody.length, lightboxIndexProp, onLightboxIndexChange);
+
+  const onClick = useLatest(onItemClick);
+
+  const handleItemClick = useCallback((idx) => {
+    if (onClick.current) {
+      onClick.current(idx);
+    }
+
+    if (withLightbox) {
+      setLightboxIndex(idx);
+    }
+  }, [ withLightbox, onClick, setLightboxIndex ]);
 
   const sharedProps = {
     className: className,
@@ -135,7 +149,6 @@ function Slider({
         >
           <SliderComponent
             {...sharedProps}
-            itemsPerPage={1}
             index={lightboxIndex}
             onIndexChange={setLightboxIndex}
             lightboxMode
@@ -149,6 +162,7 @@ function Slider({
         itemsPerPage={itemsPerPage}
         index={index}
         onIndexChange={onIndexChange}
+        onItemClick={handleItemClick}
       >
         {body}
       </SliderComponent>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { ComponentStory, ComponentMeta } from '@storybook/react';
 
 import { Slider, setModalAppElement } from '..';
@@ -16,9 +16,12 @@ let imgChildren = generateImgElements();
 setModalAppElement('#root');
 
 const StandardTemplate: ComponentStory<typeof Slider> = (props) => {
+  const [ activeIdx, setActiveIdx ] = useState(0);
+
   return (
     <div style={{ width: '100%', maxWidth: '1600px', margin: '0 auto' }}>
-      <Slider {...props}>
+      <button onClick={() => setActiveIdx((activeIdx + 1) % imgChildren.length)}>Next</button>
+      <Slider {...props} index={activeIdx} onIndexChange={setActiveIdx}>
         {imgChildren}
       </Slider>
     </div>
@@ -28,5 +31,7 @@ const StandardTemplate: ComponentStory<typeof Slider> = (props) => {
 export const Default = StandardTemplate.bind({});
 Default.args = {
   ...getClassNameProps(),
-  onIndexChange: undefined
+  onIndexChange: undefined,
+  onLightboxIndexChange: undefined,
+  withLightbox: true
 };

@@ -68,9 +68,10 @@ function useGestures(
         }
 
         let movementDelta = offset[0];
-        wasDragging.current = false;
 
-        if (!down) {
+        if (down) {
+          wasDragging.current = false;
+        } else {
           let newFirstIndex = Math.round(Math.abs(movementDelta) / itemDim);
           const speedBasedDelta = Math.round(velocity[0] / 2);
 
@@ -85,13 +86,18 @@ function useGestures(
           }
 
           movementDelta = itemDim * -newFirstIndex;
-          wasDragging.current = true;
+
+          if (wasDragging.current === false) {
+            wasDragging.current = true;
+          }
         }
 
-        sliderApi.start({
-          x: movementDelta,
-          immediate: down
-        });
+        if (wasDragging.current !== undefined) {
+          sliderApi.start({
+            x: movementDelta,
+            immediate: down
+          });
+        }
       },
       onPinch: ({
         origin: [ ox, oy ], first, movement: [ ms ],

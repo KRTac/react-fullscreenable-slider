@@ -71,6 +71,8 @@ export interface SliderComponentProps {
 
   onIndexChange?: (index: number) => any;
 
+  onItemClick?: (index: number) => any;
+
   /**
    * Controls the number of items set as visible around the active item during
    * first render, before layout sizing and before `itemsPerPage` takes control.
@@ -205,7 +207,8 @@ function SliderComponent({
   visibleSlideClassName,
   previousBtnClassName, nextBtnClassName,
   previousBtnLabel, nextBtnLabel,
-  previousBtnContent, nextBtnContent
+  previousBtnContent, nextBtnContent,
+  onItemClick
 }: SliderComponentProps) {
   const childrenCount = (children && children.length) || 0;
 
@@ -230,7 +233,7 @@ function SliderComponent({
   let [ activeIndex, setActiveIndex ] = useIndex(
     childrenCount,
     indexProp,
-    (index) => onIndexChange && onIndexChange(index || 0)
+    onIndexChange ? (index) => onIndexChange(index || 0) : undefined
   );
   const [ firstIndex, setFirstIndex ] = useViewport(
     activeIndex || 0,
@@ -302,6 +305,7 @@ function SliderComponent({
               <div
                 key={(typeof child === 'object' && child.key) || idx}
                 className={className}
+                onClick={() => onItemClick && onItemClick(idx)}
               >
                 <animated.div
                   style={itemSpringStyles[idx]}
