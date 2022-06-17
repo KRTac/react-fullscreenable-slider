@@ -127,11 +127,11 @@ function useGestures(
         let x = memo[0] - (ms - 1) * memo[2];
         let y = memo[1] - (ms - 1) * memo[3];
 
-        if (scale < .5) {
-          scale = .5;
+        if (scale < .7) {
+          scale = .7;
         }
 
-        if (!active && scale > .7 && scale < 1.3) {
+        if (!active && scale < 1.1) {
           x = 0;
           y = 0;
           scale = 1;
