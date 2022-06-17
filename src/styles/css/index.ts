@@ -8,14 +8,8 @@ const CSS_PROPS: SliderClassNames = {
     fullscreen: 'rrslider-root fullscreen'
   },
   slideClassName: 'rrslider-slide-wrapper',
-  activeSlideClassName: {
-    base: 'active',
-    fullscreen: ''
-  },
-  visibleSlideClassName: {
-    base: 'visible',
-    fullscreen: ''
-  },
+  activeSlideClassName: 'active',
+  visibleSlideClassName: 'visible',
   wrapperClassName: 'rrslider-slider',
   previousBtnClassName: 'rrslider-prev-btn',
   nextBtnClassName: 'rrslider-next-btn',
@@ -23,6 +17,26 @@ const CSS_PROPS: SliderClassNames = {
   modalClassName: 'rrslider-modal'
 };
 
-export function getClassNameProps(): SliderClassNames {
-  return CSS_PROPS;
+export function getClassNameProps(append?: string): SliderClassNames {
+  const classNames = {
+    className: {
+      base: 'rrslider-root',
+      fullscreen: 'rrslider-root fullscreen'
+    },
+    slideClassName: 'rrslider-slide-wrapper',
+    activeSlideClassName: 'active',
+    visibleSlideClassName: 'visible',
+    wrapperClassName: 'rrslider-slider',
+    previousBtnClassName: 'rrslider-prev-btn',
+    nextBtnClassName: 'rrslider-next-btn',
+    modalOverlayClassName: 'rrslider-overlay',
+    modalClassName: 'rrslider-modal'
+  };
+
+  if (append) {
+    classNames.className.base += ' ' + append
+    classNames.className.fullscreen += ' ' + append
+  }
+
+  return classNames;
 }

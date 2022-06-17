@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { ComponentStory, ComponentMeta } from '@storybook/react';
 
 import { Slider, setModalAppElement } from '..';
@@ -12,16 +12,14 @@ export default {
   component: Slider
 } as ComponentMeta<typeof Slider>;
 
-let imgChildren = generateImgElements();
+const imgChildren = generateImgElements();
 setModalAppElement('#root');
 
-const StandardTemplate: ComponentStory<typeof Slider> = (props) => {
-  const [ activeIdx, setActiveIdx ] = useState(0);
-
+const StandardTemplate: ComponentStory<typeof Slider> = ({ storyTop, ...props }) => {
   return (
-    <div style={{ width: '100%', maxWidth: '1600px', margin: '0 auto' }}>
-      <button onClick={() => setActiveIdx((activeIdx + 1) % imgChildren.length)}>Next</button>
-      <Slider {...props} index={activeIdx} onIndexChange={setActiveIdx}>
+    <div className="max-w-[1600px]">
+      {storyTop}
+      <Slider {...props}>
         {imgChildren}
       </Slider>
     </div>
@@ -30,8 +28,32 @@ const StandardTemplate: ComponentStory<typeof Slider> = (props) => {
 
 export const Default = StandardTemplate.bind({});
 Default.args = {
-  ...getClassNameProps(),
+  ...getClassNameProps('responsive'),
   onIndexChange: undefined,
   onLightboxIndexChange: undefined,
   withLightbox: true
 };
+Default.storyName = 'Default';
+
+export const VisibleActive = StandardTemplate.bind({});
+VisibleActive.args = {
+  ...getClassNameProps('responsive visible-active'),
+  onIndexChange: undefined,
+  onLightboxIndexChange: undefined,
+  withLightbox: true,
+  storyTop: (
+    <>
+      <h1>Active and visible item classes</h1>
+    </>
+  )
+};
+VisibleActive.storyName = 'With visible and active items';
+
+export const Gapped = StandardTemplate.bind({});
+Gapped.args = {
+  ...getClassNameProps('responsive gap'),
+  onIndexChange: undefined,
+  onLightboxIndexChange: undefined,
+  withLightbox: true
+};
+Gapped.storyName = 'With item gap';

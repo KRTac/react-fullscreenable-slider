@@ -61,17 +61,36 @@ export interface SliderComponentClassNames {
   nextBtnClassName?: string | SliderClassNameStates;
 }
 
-export interface SliderComponentProps {
+export interface SharedProps {
   /**
-   * The index of the desired active item when using external state management.
-   * The component will revert to internal state management when not set. Use
-   * with `onIndexChange`.
+   * Determines the item opened to the user on init, but also changes the view
+   * on every value change. Internally the actual state could change by user
+   * interaction (sliding or using the navigation), unless you set the
+   * `onIndexChange` callback.
    */
   index?: number;
 
+  /**
+   * Optional callback run every time an index change is required (user sliding
+   * or using the navigation). Use it with the `index` prop to control a
+   * component's view with external state. By default the component uses it's
+   * internal state.
+   * 
+   * ```
+   * function CustomSlider(props)
+   *   const [ activeSlide, setActiveSlide ] = useState(0);
+   * 
+   *   return (
+   *     <Slider
+   *       index={activeSlide}
+   *       onIndexChange={setActiveSlide}
+   *       {...props}
+   *     />
+   *   );
+   * }
+   * ```
+   */
   onIndexChange?: (index: number) => any;
-
-  onItemClick?: (index: number) => any;
 
   /**
    * Controls the number of items set as visible around the active item during
@@ -160,8 +179,6 @@ export interface SliderComponentProps {
    */
   itemsPerPageClassName?: string;
 
-  children?: (boolean | React.ReactChild)[];
-
   /**
    * [ARIA label][1] for the previous navigation button.
    * 
@@ -187,16 +204,23 @@ export interface SliderComponentProps {
   nextBtnContent?: React.ReactElement;
 
   /**
-   * Display in lightbox mode if `true`
-   */
-  lightboxMode?: boolean;
-
-  /**
    * Add arbitrary props
    */
   [key: string]: any;
 }
-export interface SliderComponentProps extends SliderComponentClassNames {}
+
+interface SliderComponentProps {
+  /**
+   * Display in lightbox mode if `true`
+   */
+  lightboxMode?: boolean;
+
+  children?: (boolean | React.ReactChild)[];
+
+  onItemClick?: (index: number) => any;
+}
+interface SliderComponentProps extends SharedProps {}
+interface SliderComponentProps extends SliderComponentClassNames {}
 
 
 function SliderComponent({

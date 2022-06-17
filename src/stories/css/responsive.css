@@ -1,44 +1,55 @@
 @media (min-width: 600px) {
-  .rrslider-root .rrslider-slide-wrapper {
+  .rrslider-root.responsive:not(.fullscreen) .rrslider-slide-wrapper {
+    width: calc(100% / 2);
+  }
+  .rrslider-root.responsive.gap:not(.fullscreen) .rrslider-slide-wrapper {
     width: calc(100% / 2 - .5rem);
   }
 }
 
 @media (min-width: 900px) {
-  .rrslider-root .rrslider-slide-wrapper {
+  .rrslider-root.responsive:not(.fullscreen) .rrslider-slide-wrapper {
+    width: calc(100% / 3);
+  }
+  .rrslider-root.responsive.gap:not(.fullscreen) .rrslider-slide-wrapper {
     width: calc(100% / 3 - .5rem);
   }
 }
 
 @media (min-width: 1100px) {
-  .rrslider-root .rrslider-slide-wrapper {
+  .rrslider-root.responsive:not(.fullscreen) .rrslider-slide-wrapper {
+    width: calc(100% / 4);
+  }
+  .rrslider-root.responsive.gap:not(.fullscreen) .rrslider-slide-wrapper {
     width: calc(100% / 4 - .5rem);
   }
 }
 
 @media (min-width: 1500px) {
-  .rrslider-root .rrslider-slide-wrapper {
+  .rrslider-root.responsive:not(.fullscreen) .rrslider-slide-wrapper {
+    width: calc(100% / 6);
+  }
+  .rrslider-root.responsive.gap:not(.fullscreen) .rrslider-slide-wrapper {
     width: calc(100% / 6 - .5rem);
   }
 }
 
-.rrslider-root:not(.fullscreen) .rrslider-slider {
-  background: rgb(194, 194, 194);
-}
-
-.rrslider-root:not(.fullscreen) .rrslider-slider > div {
+.rrslider-root.responsive.gap:not(.fullscreen) .rrslider-slider > div {
   margin: 0 -0.25rem;
 }
 
-.rrslider-root:not(.fullscreen) .rrslider-slide-wrapper {
-  padding: .25rem;
+.rrslider-root.responsive.gap:not(.fullscreen) .rrslider-slide-wrapper {
   margin: 0 0.25rem;
 }
 
-.rrslider-root .rrslider-slide-wrapper.visible {
+.rrslider-root.responsive.visible-active:not(.fullscreen) .rrslider-slide-wrapper {
+  padding: .25rem;
+}
+
+.rrslider-root.responsive.visible-active:not(.fullscreen) .rrslider-slide-wrapper.visible {
   background-color: rgb(197, 255, 143);
 }
 
-.rrslider-root .rrslider-slide-wrapper.active {
+.rrslider-root.responsive.visible-active:not(.fullscreen) .rrslider-slide-wrapper.active {
   background-color: rgb(255, 103, 103);
 }

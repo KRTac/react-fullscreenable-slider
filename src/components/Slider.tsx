@@ -4,7 +4,7 @@ import useLatest from '@react-hook/latest';
 
 import {
   default as SliderComponent,
-  SliderComponentClassNames, SliderComponentProps
+  SliderComponentClassNames, SharedProps
 } from './SliderComponent';
 import { useFilteredChildren, useIndex } from '../hooks';
 
@@ -86,10 +86,7 @@ export interface SliderProps {
 
   onLightboxIndexChange?: (index?: number) => any;
 }
-export interface SliderProps extends Omit<
-  SliderComponentProps,
-  'children' | 'lightboxMode'
-> {}
+export interface SliderProps extends SharedProps {}
 export interface SliderProps extends SliderClassNames {}
 
 
@@ -100,7 +97,6 @@ function Slider({
   withLightbox,
   index, onIndexChange,
   lightboxIndex: lightboxIndexProp, onLightboxIndexChange,
-  onItemClick,
   className, wrapperClassName,
   slideClassName, activeSlideClassName, visibleSlideClassName,
   previousBtnClassName, nextBtnClassName,
@@ -112,17 +108,11 @@ function Slider({
     lightboxIndex, setLightboxIndex
   ] = useIndex(lightboxBody.length, lightboxIndexProp, onLightboxIndexChange);
 
-  const onClick = useLatest(onItemClick);
-
   const handleItemClick = useCallback((idx) => {
-    if (onClick.current) {
-      onClick.current(idx);
-    }
-
     if (withLightbox) {
       setLightboxIndex(idx);
     }
-  }, [ withLightbox, onClick, setLightboxIndex ]);
+  }, [ withLightbox, setLightboxIndex ]);
 
   const sharedProps = {
     className: className,

@@ -1,4 +1,8 @@
+import '../src/stories/css/main.css';
+
+
 export const parameters = {
+  layout: 'centered',
   actions: { argTypesRegex: "^on[A-Z].*" },
   controls: {
     matchers: {
@@ -6,4 +10,4 @@ export const parameters = {
       date: /Date$/,
     },
   },
-}
+};
