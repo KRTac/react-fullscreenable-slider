@@ -201,7 +201,7 @@ function useGestures(
         }
       },
       pinch: {
-        scaleBounds: { min: .5, max: 5 }
+        scaleBounds: { min: .7, max: 5 }
       }
     }
   );
