@@ -82,8 +82,37 @@ export interface SliderProps {
    */
   children?: React.ReactNode;
 
+  /**
+   * Determines the item displayed in the lightbox if `withLightbox` is set.
+   * Internally the actual state could change by user interaction (sliding or
+   * using the lightbox navigation), unless you set the `onLightboxIndexChange`
+   * callback.
+   */
   lightboxIndex?: number;
 
+  /**
+   * Optional callback run on lightbox index change (lightbox navigation or
+   * swiping). If the user closes the lightbox, the index will be undefined. Use
+   * it with the `lightboxIndex` prop to control a component's lightbox with
+   * external state.
+   * 
+   * ```
+   * function CustomSlider(props)
+   *   const [
+   *     activeSlide,
+   *     setActiveSlide
+   *   ] = useState(undefined);
+   * 
+   *   return (
+   *     <Slider
+   *       lightboxIndex={activeSlide}
+   *       onLightboxIndexChange={setActiveSlide}
+   *       {...props}
+   *     />
+   *   );
+   * }
+   * ```
+   */
   onLightboxIndexChange?: (index?: number) => any;
 }
 export interface SliderProps extends SharedProps {}

@@ -76,7 +76,7 @@ function useSlider(
     });
 
     initiated.current = true;
-  }, [ firstIndex, itemDim, childrenCount, wasDragging ]);
+  }, [ firstIndex, itemDim, childrenCount, wasDragging, api ]);
 
   useEffect(() => {
     itemDimRef.current = itemDim;
