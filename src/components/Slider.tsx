@@ -1,6 +1,5 @@
 import React, { useCallback } from 'react';
 import ReactModal, { setAppElement } from 'react-modal';
-import useLatest from '@react-hook/latest';
 
 import {
   default as SliderComponent,
@@ -130,7 +129,8 @@ function Slider({
   slideClassName, activeSlideClassName, visibleSlideClassName,
   previousBtnClassName, nextBtnClassName,
   modalClassName, modalOverlayClassName, modalPortalClassName,
-  modalBodyOpenClassName, modalHtmlOpenClassName
+  modalBodyOpenClassName, modalHtmlOpenClassName,
+  navigationTriggers, navigationTarget
 }: SliderProps) {
   const [ body, lightboxBody ] = useFilteredChildren(childrenProp);
   const [
@@ -144,13 +144,15 @@ function Slider({
   }, [ withLightbox, setLightboxIndex ]);
 
   const sharedProps = {
-    className: className,
-    slideClassName: slideClassName,
-    activeSlideClassName: activeSlideClassName,
-    visibleSlideClassName: visibleSlideClassName,
-    wrapperClassName: wrapperClassName,
-    previousBtnClassName: previousBtnClassName,
-    nextBtnClassName: nextBtnClassName
+    className,
+    slideClassName,
+    activeSlideClassName,
+    visibleSlideClassName,
+    wrapperClassName,
+    previousBtnClassName,
+    nextBtnClassName,
+    navigationTriggers,
+    navigationTarget
   };
 
   return (

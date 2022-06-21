@@ -6,5 +6,6 @@ export { default as useGestures } from './useGestures';
 export { default as useIndex } from './useIndex';
 export { default as useItemsPerPage } from './useItemsPerPage';
 export { default as useItemSprings } from './useItemSprings';
+export { default as useNavigation } from './useNavigation';
 export { default as useSlider } from './useSlider';
 export { default as useViewport } from './useViewport';

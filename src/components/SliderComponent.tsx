@@ -6,7 +6,8 @@ import {
 } from '../utils';
 import {
   useAnimationTargets, useItemsPerPage, useAxisDimensions, useIndex,
-  useViewport, useSlider, useGestures, useBlockSafariGestures, useItemSprings
+  useViewport, useSlider, useGestures, useBlockSafariGestures, useItemSprings,
+  useNavigation
 } from '../hooks';
 
 
@@ -134,7 +135,7 @@ export interface SharedProps {
    * items per page. That can be used in CSS to then size each slide. See
    * `itemsPerPageClassName`
    */
-  itemsPerPage?: number | string;
+  itemsPerPage?: number | 'auto';
 
   /**
    * Partial class name applied to the slide wrapper element indicating the
@@ -203,6 +204,10 @@ export interface SharedProps {
    */
   nextBtnContent?: React.ReactElement;
 
+  navigationTarget?: 'items' | 'slide';
+
+  navigationTriggers?: any[];
+
   /**
    * Add arbitrary props
    */
@@ -232,7 +237,7 @@ function SliderComponent({
   previousBtnClassName, nextBtnClassName,
   previousBtnLabel, nextBtnLabel,
   previousBtnContent, nextBtnContent,
-  onItemClick
+  onItemClick, navigationTarget = 'slide', navigationTriggers = [ 0, 0 ]
 }: SliderComponentProps) {
   const childrenCount = (children && children.length) || 0;
 
@@ -253,6 +258,7 @@ function SliderComponent({
   );
 
   const wasDragging = useRef<boolean | undefined>(undefined);
+  const navLock = useRef<boolean>(false);
 
   let [ activeIndex, setActiveIndex ] = useIndex(
     childrenCount,
@@ -263,7 +269,9 @@ function SliderComponent({
     activeIndex || 0,
     childrenCount,
     itemsPerPage,
-    wasDragging
+    wasDragging,
+    navigationTarget,
+    navLock
   );
 
   const [ sliderSpringStyles, sliderApi ] = useSlider(
@@ -289,6 +297,18 @@ function SliderComponent({
   );
 
   useBlockSafariGestures();
+
+  let [ navDown, navUp ] = useNavigation(
+    navigationTarget,
+    activeIndex || 0,
+    setActiveIndex,
+    firstIndex,
+    setFirstIndex,
+    itemsPerPage,
+    childrenCount,
+    navLock,
+    navigationTriggers
+  );
 
   return (
     <div className={resolveClassName(className, lightboxMode)}>
@@ -344,7 +364,7 @@ function SliderComponent({
       </div>
       <span
         className={resolveClassName(previousBtnClassName, lightboxMode)}
-        onClick={() => setActiveIndex((activeIndex || 0) - 1)}
+        onClick={navDown}
         aria-label={previousBtnLabel}
         tabIndex={0}
         role="button"
@@ -354,7 +374,7 @@ function SliderComponent({
       </span>
       <span
         className={resolveClassName(nextBtnClassName, lightboxMode)}
-        onClick={() => setActiveIndex((activeIndex || 0) + 1)}
+        onClick={navUp}
         aria-label={nextBtnLabel}
         tabIndex={0}
         role="button"
@@ -370,7 +390,8 @@ SliderComponent.defaultProps = {
   index: 0,
   itemsPerPage: 'auto',
   previousBtnLabel: 'Previous',
-  nextBtnLabel: 'Next'
+  nextBtnLabel: 'Next',
+  navigationTarget: 'slide'
 };
 
 export default SliderComponent;
