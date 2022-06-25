@@ -130,6 +130,7 @@ function Slider({
   previousBtnClassName, nextBtnClassName,
   modalClassName, modalOverlayClassName, modalPortalClassName,
   modalBodyOpenClassName, modalHtmlOpenClassName,
+  itemsPerPageClassName,
   navigationTriggers, navigationTarget
 }: SliderProps) {
   const [ body, lightboxBody ] = useFilteredChildren(childrenProp);
@@ -151,6 +152,7 @@ function Slider({
     wrapperClassName,
     previousBtnClassName,
     nextBtnClassName,
+    itemsPerPageClassName,
     navigationTriggers,
     navigationTarget
   };

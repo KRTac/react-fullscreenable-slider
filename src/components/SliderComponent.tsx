@@ -60,82 +60,6 @@ export interface SliderComponentClassNames {
    * as an object with `base` and `fullscreen` class names.
    */
   nextBtnClassName?: string | SliderClassNameStates;
-}
-
-export interface SharedProps {
-  /**
-   * Determines the item opened to the user on init, but also changes the view
-   * on every value change. Internally the actual state could change by user
-   * interaction (sliding or using the navigation), unless you set the
-   * `onIndexChange` callback.
-   */
-  index?: number;
-
-  /**
-   * Optional callback run every time an index change is required (user sliding
-   * or using the navigation). Use it with the `index` prop to control a
-   * component's view with external state. By default the component uses it's
-   * internal state.
-   * 
-   * ```
-   * function CustomSlider(props)
-   *   const [ activeSlide, setActiveSlide ] = useState(0);
-   * 
-   *   return (
-   *     <Slider
-   *       index={activeSlide}
-   *       onIndexChange={setActiveSlide}
-   *       {...props}
-   *     />
-   *   );
-   * }
-   * ```
-   */
-  onIndexChange?: (index: number) => any;
-
-  /**
-   * Controls the number of items set as visible around the active item during
-   * first render, before layout sizing and before `itemsPerPage` takes control.
-   * 
-   * An item is each individual child element of the slider. You can also use
-   * nested react fragments, as they get flattened out into a single children
-   * array.
-   * 
-   * **Note:** If not set, it will take the value of `itemsPerPage` if it's set
-   * to a number, otherwise it will default to 1.
-   * 
-   * This is useful for server side rendering (SSR) and similar situations.
-   */
-  initialItemsPerPage?: number;
-
-  /**
-   * Controls the responsive capabilities of the slider by indicating the number
-   * of items displayed on the slider at the same time. This takes effect after
-   * the initial render of the component and it overrides the
-   * `initialItemsPerPage` prop setting.
-   * 
-   * An item is each individual child element of the slider. You can also use
-   * nested react fragments, as they get flattened out into a single children
-   * array.
-   * 
-   * If set to `'auto'`, the slider will calculate the number of slides based on
-   * the dimensions set by the CSS. It tracks changes in slider and document
-   * size, so it responds to responsive designs automatically. That way you can
-   * vary the number of items per page with media queries inside CSS, without
-   * the need to manually specify the number of items for each responsive step
-   * via props.
-   * 
-   * *Link to example*
-   * 
-   * It can also be set directly to the desired number of items per page,
-   * without dimension calculation. That can be useful e.g. if you have an
-   * external control for the number of items on a page. The slider still
-   * expects the actual sizing of each slide to be defined using CSS. A helper
-   * class is attached to the slide wrapper element indicating the number of
-   * items per page. That can be used in CSS to then size each slide. See
-   * `itemsPerPageClassName`
-   */
-  itemsPerPage?: number | 'auto';
 
   /**
    * Partial class name applied to the slide wrapper element indicating the
@@ -178,7 +102,66 @@ export interface SharedProps {
    * 
    * [1]: #
    */
-  itemsPerPageClassName?: string;
+  itemsPerPageClassName?: string | SliderClassNameStates;
+}
+
+export interface SharedProps {
+  /**
+   * Determines the item opened to the user on init, but also changes the view
+   * on every value change. Internally the actual state could change by user
+   * interaction (sliding or using the navigation), unless you set the
+   * `onIndexChange` callback.
+   */
+  index?: number;
+
+  /**
+   * Optional callback run every time an index change is required (user sliding
+   * or using the navigation). Use it with the `index` prop to control a
+   * component's view with external state. By default the component uses it's
+   * internal state.
+   * 
+   * ```
+   * function CustomSlider(props)
+   *   const [ activeSlide, setActiveSlide ] = useState(0);
+   * 
+   *   return (
+   *     <Slider
+   *       index={activeSlide}
+   *       onIndexChange={setActiveSlide}
+   *       {...props}
+   *     />
+   *   );
+   * }
+   * ```
+   */
+  onIndexChange?: (index: number) => any;
+
+  /**
+   * Controls the responsive capabilities of the slider by indicating the number
+   * of items displayed on the slider at the same time.
+   * 
+   * An item is each individual child element of the slider. You can also use
+   * nested react fragments, as they get flattened out into a single children
+   * array.
+   * 
+   * If set to `'auto'`, the slider will calculate the number of slides based on
+   * the dimensions set by the CSS. It tracks changes in slider and document
+   * size, so it responds to responsive designs automatically. That way you can
+   * vary the number of items per page with media queries inside CSS, without
+   * the need to manually specify the number of items for each responsive step
+   * via props.
+   * 
+   * *Link to example*
+   * 
+   * It can also be set directly to the desired number of items per page,
+   * without dimension calculation. That can be useful e.g. if you have an
+   * external control for the number of items on a page. The slider still
+   * expects the actual sizing of each slide to be defined using CSS. A helper
+   * class is attached to the slide wrapper element indicating the number of
+   * items per page. That can be used in CSS to then size each slide. See
+   * `itemsPerPageClassName`
+   */
+  itemsPerPage?: number | 'auto';
 
   /**
    * [ARIA label][1] for the previous navigation button.
@@ -233,7 +216,7 @@ function SliderComponent({
   itemsPerPage: itemsPerPageProp = 'auto',
   children, index: indexProp = 0, onIndexChange,
   className, wrapperClassName, slideClassName, activeSlideClassName,
-  visibleSlideClassName,
+  visibleSlideClassName, itemsPerPageClassName,
   previousBtnClassName, nextBtnClassName,
   previousBtnLabel, nextBtnLabel,
   previousBtnContent, nextBtnContent,
@@ -343,6 +326,15 @@ function SliderComponent({
                   className += ' ' + activeClassName;
                 }
               }
+            }
+
+            const perPageClassName = resolveClassName(
+              itemsPerPageClassName,
+              lightboxMode
+            );
+
+            if (perPageClassName) {
+              className += ' ' + perPageClassName + itemsPerPage;
             }
 
             return (
