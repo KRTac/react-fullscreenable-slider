@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { ComponentStory, ComponentMeta } from '@storybook/react';
 
-import { Slider, setModalAppElement } from '..';
+import { Slider } from '..';
 import { getClassNameProps } from '../styles/css';
 import { generateImgElements } from './assets/unsplash';
 
@@ -13,7 +13,6 @@ export default {
 
 const imgChildren = generateImgElements();
 const childNum = imgChildren.length;
-setModalAppElement('#root');
 
 const ControlledTemplate: ComponentStory<typeof Slider> = (props) => {
   const [ activeIdx, setActiveIdx ] = useState(0);

@@ -1,0 +1,30 @@
+import { Meta, Canvas } from '@storybook/addon-docs';
+
+import { Slider } from '..';
+import Spacer from './components/Spacer';
+import { getClassNameProps } from '../styles/css';
+import { generateImgElements } from './assets/unsplash';
+import './css/getting-started.css';
+
+
+export const classNames = getClassNameProps('getting-started');
+export const imgChildren = generateImgElements();
+
+<Meta
+  title="Docs/Getting started"
+  parameters={{
+    viewMode: 'docs',
+    previewTabs: {
+      canvas: {
+        hidden: true
+      }
+    }
+  }}
+/>
+
+
+<Spacer>
+  <Slider {...classNames}>{imgChildren}</Slider>
+</Spacer>
+
+# Getting started

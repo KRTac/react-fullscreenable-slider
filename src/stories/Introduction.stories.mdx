@@ -1,8 +1,41 @@
-import { Meta } from '@storybook/addon-docs';
+import { Meta, Canvas } from '@storybook/addon-docs';
+
+import { Slider } from '..';
+import Spacer from './components/Spacer';
+import ModalHelper from './components/ModalHelper';
+import { getClassNameProps } from '../styles/css';
+import { generateImgElements } from './assets/unsplash';
+import './css/getting-started.css';
 
 
-<Meta title="Docs/Introduction" />
+<Meta
+  title="Docs/Introduction"
+  parameters={{
+    viewMode: 'docs',
+    previewTabs: {
+      canvas: {
+        hidden: true
+      }
+    }
+  }}
+/>
 
-# Interactive Slider Examples
+export const classNames = getClassNameProps('getting-started');
+export const imgChildren = generateImgElements();
 
-Interactive slider examples using Storybook.
+# Introduction
+
+`react-responsive-slider` is a carousel-style slider that supports CSS-based
+responsive designs, multiple items per slide (based on your CSS) and has
+built-in lightbox support (using [react-modal][1]) with pinch-zoom. It uses
+[useGesture][2] under the hood for mouse/touch gestures and [react-spring][3]
+for animations.
+
+[1]: https://reactcommunity.org/react-modal/
+[2]: https://use-gesture.netlify.app/
+[3]: https://react-spring.io/
+
+<Spacer>
+  <ModalHelper root="#root" />
+  <Slider {...classNames} withLightbox>{imgChildren}</Slider>
+</Spacer>
