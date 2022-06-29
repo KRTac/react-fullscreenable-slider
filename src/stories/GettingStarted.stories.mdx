@@ -2,6 +2,7 @@ import { Meta, Canvas } from '@storybook/addon-docs';
 
 import { Slider } from '..';
 import Spacer from './components/Spacer';
+import ModalHelper from './components/ModalHelper';
 import { getClassNameProps } from '../styles/css';
 import { generateImgElements } from './assets/unsplash';
 import './css/getting-started.css';
@@ -24,6 +25,7 @@ export const imgChildren = generateImgElements();
 
 
 <Spacer>
+  <ModalHelper appRoot="#docs-root" />
   <Slider {...classNames}>{imgChildren}</Slider>
 </Spacer>
 

@@ -3,10 +3,30 @@ import { Meta, Canvas } from '@storybook/addon-docs';
 import { Slider } from '..';
 import Spacer from './components/Spacer';
 import ModalHelper from './components/ModalHelper';
+import DocsSummary from './components/DocsSummary';
+import Typography from './components/Typography';
 import { getClassNameProps } from '../styles/css';
 import { generateImgElements } from './assets/unsplash';
 import './css/getting-started.css';
 
+
+export const classNames = getClassNameProps('getting-started');
+export const imgChildren = generateImgElements();
+export const docsItems = [
+  {
+    title: 'Getting started',
+    summary: 'Getting started summary',
+    href: '?path=/story/docs-getting-started--page'
+  },
+  {
+    title: 'Styling',
+    summary: 'Styling summary'
+  },
+  {
+    title: 'Concepts',
+    summary: 'Concepts summary'
+  }
+];
 
 <Meta
   title="Docs/Introduction"
@@ -20,22 +40,39 @@ import './css/getting-started.css';
   }}
 />
 
-export const classNames = getClassNameProps('getting-started');
-export const imgChildren = generateImgElements();
+<Typography>
 
 # Introduction
 
 `react-responsive-slider` is a carousel-style slider that supports CSS-based
-responsive designs, multiple items per slide (based on your CSS) and has
-built-in lightbox support (using [react-modal][1]) with pinch-zoom. It uses
-[useGesture][2] under the hood for mouse/touch gestures and [react-spring][3]
-for animations.
+responsive designs, multiple items per slide and has built-in lightbox support
+(using [react-modal][modal]) with pinch-zoom. It uses [useGesture][gesture]
+under the hood for mouse/touch gestures and [react-spring][spring] for
+animations.
 
-[1]: https://reactcommunity.org/react-modal/
-[2]: https://use-gesture.netlify.app/
-[3]: https://react-spring.io/
+[modal]: https://reactcommunity.org/react-modal/
+[gesture]: https://use-gesture.netlify.app/
+[spring]: https://react-spring.io/
+
+</Typography>
 
 <Spacer>
-  <ModalHelper root="#root" />
+  <ModalHelper appRoot="#docs-root" />
   <Slider {...classNames} withLightbox>{imgChildren}</Slider>
 </Spacer>
+
+<Typography>
+
+The slider doesn't control the responsive behavior, rather it tracks size
+changes and follows the sizing set by the CSS. This enables the usage of
+standard media queries inside CSS to, for example, change the number of items on
+a slide. By default the slider displays one item per slide and you need to
+implement the responsive functionality based on your needs. All of the styling
+is applied trough CSS classes, which enables easy integration with, i.e.
+[tailwind css][tw].
+
+[tw]: https://tailwindcss.com/
+
+<DocsSummary items={docsItems} />
+
+</Typography>

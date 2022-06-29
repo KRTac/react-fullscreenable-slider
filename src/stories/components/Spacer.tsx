@@ -1,9 +1,18 @@
 import React from 'react';
 
 
-function Spacer({ children }: { children: React.ReactNode }) {
+type SpacerProps = {
+  children: React.ReactNode,
+  className?: string
+};
+
+function Spacer({ children, className }: SpacerProps) {
   return (
-    <div className="my-10">{children}</div>
+    <div
+      className={`my-14 lg:my-20${className ? ' ' + className : ''}`}
+    >
+      {children}
+    </div>
   );
 }
 

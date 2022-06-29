@@ -1,3 +1,5 @@
+const defaultTheme = require('tailwindcss/defaultTheme');
+
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
@@ -5,7 +7,13 @@ module.exports = {
     './.storybook/preview.js'
   ],
   theme: {
-    extend: {},
+    fontFamily: {
+      sans: [ '\'Open Sans\'', ...defaultTheme.fontFamily.sans ],
+      mono: [ '\'Source Code Pro\'', ...defaultTheme.fontFamily.serif ]
+    },
+    extend: {}
   },
-  plugins: [],
-}
+  plugins: [
+    require('@tailwindcss/typography')
+  ]
+};
