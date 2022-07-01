@@ -25,6 +25,9 @@ export const parameters = {
       h4: 'h4',
       h5: 'h5',
       p: 'p',
+      ol: 'ol',
+      ul: 'ul',
+      li: 'li',
       a: LinkTo
     }
   }

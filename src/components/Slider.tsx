@@ -113,6 +113,11 @@ export interface SliderProps {
    * ```
    */
   onLightboxIndexChange?: (index?: number) => any;
+
+  /**
+   * Enable pinch zoom inside the lightbox
+   */
+  withLightboxScaling?: boolean;
 }
 export interface SliderProps extends SharedProps {}
 export interface SliderProps extends SliderClassNames {}
@@ -131,7 +136,8 @@ function Slider({
   modalClassName, modalOverlayClassName, modalPortalClassName,
   modalBodyOpenClassName, modalHtmlOpenClassName,
   itemsPerPageClassName,
-  navigationTriggers, navigationTarget
+  navigationTriggers, navigationTarget,
+  withScaling, withLightboxScaling
 }: SliderProps) {
   const [ body, lightboxBody ] = useFilteredChildren(childrenProp);
   const [
@@ -174,6 +180,7 @@ function Slider({
             {...sharedProps}
             index={lightboxIndex}
             onIndexChange={setLightboxIndex}
+            withScaling={withLightboxScaling}
             lightboxMode
           >
             {lightboxBody}
@@ -186,6 +193,7 @@ function Slider({
         index={index}
         onIndexChange={onIndexChange}
         onItemClick={handleItemClick}
+        withScaling={withScaling}
       >
         {body}
       </SliderComponent>
@@ -195,7 +203,8 @@ function Slider({
 
 Slider.defaultProps = {
   ...SliderComponent.defaultProps,
-  withLightbox: false
+  withLightbox: false,
+  withLightboxScaling: true
 };
 
 export default Slider;

@@ -12,7 +12,7 @@ type SummaryItem = {
 function DocsSummary({ items }: { items: SummaryItem[] }) {
   return (
     <div
-      className="my-10 flex flex-row items-start flex-wrap max-w-md md:max-w-3xl mx-auto"
+      className="mb-10 flex flex-row items-start flex-wrap max-w-md md:max-w-3xl mx-auto"
     >
       {items.map(({
         title, summary, href

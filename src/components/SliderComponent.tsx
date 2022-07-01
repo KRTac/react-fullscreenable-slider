@@ -195,6 +195,11 @@ export interface SharedProps {
    * Add arbitrary props
    */
   [key: string]: any;
+
+  /**
+   * Enable pinch zoom
+   */
+   withScaling?: boolean;
 }
 
 interface SliderComponentProps {
@@ -220,7 +225,8 @@ function SliderComponent({
   previousBtnClassName, nextBtnClassName,
   previousBtnLabel, nextBtnLabel,
   previousBtnContent, nextBtnContent,
-  onItemClick, navigationTarget = 'slide', navigationTriggers = [ 0, 0 ]
+  onItemClick, navigationTarget = 'slide', navigationTriggers = [ 0, 0 ],
+  withScaling = false
 }: SliderComponentProps) {
   const childrenCount = (children && children.length) || 0;
 
@@ -276,7 +282,8 @@ function SliderComponent({
 
   useGestures(
     sliderRef, itemDim, childrenCount, itemsPerPage, animationTargets,
-    itemSpringStyles, itemSprings, sliderSpringStyles, sliderApi, wasDragging
+    itemSpringStyles, itemSprings, sliderSpringStyles, sliderApi, wasDragging,
+    withScaling
   );
 
   useBlockSafariGestures();
@@ -383,7 +390,8 @@ SliderComponent.defaultProps = {
   itemsPerPage: 'auto',
   previousBtnLabel: 'Previous',
   nextBtnLabel: 'Next',
-  navigationTarget: 'slide'
+  navigationTarget: 'slide',
+  withScaling: false
 };
 
 export default SliderComponent;

@@ -25,7 +25,8 @@ function useGestures(
   }>,
   sliderStyles: { x: SpringValue<number>; },
   sliderApi: SpringRef<{ x: number; }>,
-  wasDragging: React.MutableRefObject<boolean | undefined>
+  wasDragging: React.MutableRefObject<boolean | undefined>,
+  withScaling?: boolean
 ) {
   useGestureCustom(
     {
@@ -103,7 +104,11 @@ function useGestures(
         origin: [ ox, oy ], first, movement: [ ms ],
         offset: [ scale ], memo, cancel, active, target
       }) => {
-        if (animationTargets.current.length === 0 || !sliderRef.current) {
+        if (
+          !withScaling ||
+          animationTargets.current.length === 0 ||
+          !sliderRef.current
+        ) {
           return cancel();
         }
 
